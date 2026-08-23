@@ -2399,27 +2399,3 @@
                 });
             }
         })();
-
-        // ===== MOBILE DEBUG OVERLAY (iOS diagnostics) =====
-        // Temporary: catches any JS error and shows it directly on screen so
-        // issues can be diagnosed on a phone without needing a computer.
-        // Safe to remove once the "nothing works on iOS" issue is confirmed fixed.
-        (function setupMobileDebugOverlay() {
-            const box = document.createElement('div');
-            box.id = 'debugErrorOverlay';
-            box.style.cssText = 'display:none;position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;' +
-                'background:rgba(20,0,0,0.92);color:#ff6b6b;font:11px/1.4 monospace;padding:10px;' +
-                'padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));z-index:99999999;white-space:pre-wrap;';
-            document.addEventListener('DOMContentLoaded', () => document.body.appendChild(box));
-            function report(msg) {
-                if (!box.parentNode) document.body.appendChild(box);
-                box.style.display = 'block';
-                box.textContent += msg + '\n\n';
-            }
-            window.addEventListener('error', (e) => {
-                report(`JS Error: ${e.message}\nFile: ${e.filename}:${e.lineno}:${e.colno}`);
-            });
-            window.addEventListener('unhandledrejection', (e) => {
-                report(`Promise rejection: ${e.reason}`);
-            });
-        })();

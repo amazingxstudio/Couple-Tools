@@ -4,6 +4,56 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Couple Tools</title>
+    <script>
+    (function () {
+        // FIX (2026-08-24): this MUST be the first script in the page, and it
+        // must never depend on app.js. Reasoning: if app.js has a parse-time
+        // error anywhere in its ~2400 lines, the WHOLE file silently fails to
+        // run — including any error-catcher defined inside it. That is likely
+        // why the previous debug overlay (which lived inside app.js) never
+        // showed anything. This version lives here instead, so it can catch
+        // failures in app.js, the CDN scripts, or anything else.
+        var box;
+        function ensureBox() {
+            if (box) return box;
+            box = document.createElement('div');
+            box.id = 'earlyDebugOverlay';
+            box.style.cssText = 'display:none;position:fixed;left:0;right:0;bottom:0;max-height:45vh;overflow:auto;' +
+                'background:rgba(20,0,0,0.95);color:#ff6b6b;font:11px/1.4 monospace;padding:10px;' +
+                'padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:2147483647;white-space:pre-wrap;';
+            (document.body || document.documentElement).appendChild(box);
+            return box;
+        }
+        function report(msg) {
+            var b = ensureBox();
+            b.style.display = 'block';
+            b.textContent += msg + '\n\n';
+        }
+        window.addEventListener('error', function (e) {
+            report('Error: ' + e.message + '\n' + (e.filename || '(inline)') + ':' + e.lineno + ':' + e.colno);
+        }, true);
+        window.addEventListener('unhandledrejection', function (e) {
+            report('Promise rejection: ' + e.reason);
+        });
+
+        // Self-heal: a stale service worker from an earlier deploy can keep
+        // serving old cached files forever on iOS Safari even after a new
+        // Vercel deploy — this is the leading suspect for "works on Android,
+        // frozen/stuck on iOS", since Android Chrome tends to re-check for
+        // service worker updates more aggressively. This wipes any existing
+        // registration + cache once per load; harmless no-op if none exist.
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+                regs.forEach(function (r) { r.unregister(); });
+            }).catch(function () {});
+        }
+        if (window.caches && caches.keys) {
+            caches.keys().then(function (keys) {
+                keys.forEach(function (k) { caches.delete(k); });
+            }).catch(function () {});
+        }
+    })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.1/jsmediatags.min.js"></script>
