@@ -55,8 +55,8 @@
     })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.1/jsmediatags.min.js"></script>
+    <script src="vendor/localforage.min.js"></script>
+    <script src="vendor/jsmediatags.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet" />
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -769,6 +769,29 @@
         </div>
     </div>
 
+    <script>
+    (function () {
+        // FIX (2026-08-24): localforage is now self-hosted (vendor/), so it
+        // no longer depends on a third-party CDN succeeding on flaky mobile
+        // networks. This is a last line of defense: if it — or any other
+        // required dependency — is still somehow missing right before app.js
+        // runs, show a clear, tappable message instead of a silent freeze.
+        var missing = [];
+        if (typeof localforage === 'undefined') missing.push('localforage (vendor/localforage.min.js)');
+        if (typeof jsmediatags === 'undefined') missing.push('jsmediatags (vendor/jsmediatags.min.js)');
+        if (missing.length) {
+            var msg = document.createElement('div');
+            msg.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#111;color:#fff;' +
+                'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+                'padding:24px;text-align:center;font:15px/1.5 -apple-system,sans-serif;gap:14px;';
+            msg.innerHTML = '<div>App ကို ဖွင့်ရာမှာ file အချို့ ခဏတဖုးလေး load မဖြစ်နိုင်ပါဘူး ' +
+                '(' + missing.join(', ') + ')။ Network ကောင်းအောင်စစ်ပြီး ပြန်ကြိုးစားကြည့်ပါ။</div>' +
+                '<button style="padding:10px 22px;border-radius:24px;background:#3b82f6;color:#fff;border:none;font-size:15px;">ပြန်ဖွင့်ရန်</button>';
+            msg.querySelector('button').onclick = function () { location.reload(); };
+            (document.body || document.documentElement).appendChild(msg);
+        }
+    })();
+    </script>
     <script src="app.js"></script>
 </body>
 </html>
