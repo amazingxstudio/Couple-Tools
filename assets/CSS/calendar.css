@@ -1,0 +1,136 @@
+/*
+  calendar.css
+  ------------
+  Month grid, day detail panel, notes and memory photos.
+*/
+
+.cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sp-4) var(--sp-3);
+  flex-shrink: 0;
+}
+.cal-nav h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 var(--sp-4);
+  margin-bottom: 4px;
+}
+.cal-weekdays span {
+  text-align: center;
+  font-size: 0.64rem;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  padding: 0 var(--sp-4) var(--sp-4);
+  flex-shrink: 0;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  border-radius: var(--r-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+}
+.cal-day:hover { background: var(--field-bg); }
+.cal-day.is-today { border: 1.5px solid var(--accent); }
+.cal-day.is-selected { background: var(--accent); color: var(--accent-ink); }
+.cal-day .cal-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.cal-day .cal-tag {
+  font-size: 0.5rem;
+  font-weight: 700;
+  opacity: 0.85;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cal-day.is-anniv { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.cal-day.is-birthday-a { background: color-mix(in srgb, #4c8c6b 20%, transparent); }
+.cal-day.is-birthday-b { background: color-mix(in srgb, #7a6fce 20%, transparent); }
+.cal-day.is-birthday-both { background: linear-gradient(90deg, color-mix(in srgb, #4c8c6b 22%, transparent), color-mix(in srgb, #7a6fce 22%, transparent)); }
+
+.cal-detail {
+  border-top: 1px solid var(--divider);
+  padding: var(--sp-4);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.cal-detail-date {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: var(--sp-4);
+}
+.cal-detail-date .flag {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-top: 3px;
+}
+
+.note-cat-row {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+  flex-wrap: wrap;
+}
+.note-item {
+  padding: var(--sp-3);
+  border-radius: var(--r-sm);
+  margin-bottom: var(--sp-2);
+  position: relative;
+  font-size: 0.86rem;
+  border-left: 3px solid var(--accent);
+}
+.note-item .cat {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--ink-soft);
+  margin-bottom: 3px;
+}
+.note-item button {
+  position: absolute; top: 8px; right: 8px;
+  border: none; background: none; color: var(--ink-soft); cursor: pointer;
+}
+.note-item button svg { width: 12px; height: 12px; fill: currentColor; }
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: var(--sp-2);
+}
+.memory-thumb {
+  aspect-ratio: 1;
+  border-radius: var(--r-sm);
+  object-fit: cover;
+  cursor: pointer;
+}

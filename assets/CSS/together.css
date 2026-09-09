@@ -1,0 +1,246 @@
+/*
+  together.css
+  ------------
+  Styles for the "Together" tab — the page that replaces the old
+  fake-chat Message page. Daily question, love notes wall, bucket
+  list, gratitude jar, milestone timeline.
+*/
+
+.together-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 0 var(--sp-4) var(--sp-3);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+.together-panel { display: none; }
+.together-panel.is-active { display: block; }
+
+/* ---- Daily question ---- */
+.question-card {
+  padding: var(--sp-5);
+  text-align: center;
+  margin-bottom: var(--sp-5);
+}
+.question-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+  margin-bottom: var(--sp-2);
+}
+.question-text {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.35;
+  margin-bottom: var(--sp-4);
+}
+.question-answer-row {
+  display: flex;
+  gap: var(--sp-2);
+}
+.question-answer-row .field-textarea { min-height: 64px; margin: 0; }
+.question-log {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.answer-item {
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+}
+.answer-item .who {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.answer-item .date {
+  font-size: 0.66rem;
+  color: var(--ink-soft);
+  float: right;
+}
+.answer-item p { font-size: 0.88rem; line-height: 1.4; }
+
+/* ---- Love notes wall ---- */
+.note-composer {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+  align-items: flex-end;
+}
+.note-composer .field-textarea { margin: 0; min-height: 52px; }
+
+.note-wall {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.note-entry {
+  position: relative;
+  padding: var(--sp-4);
+  border-radius: var(--r-md);
+  border-left: 3px solid var(--accent);
+}
+.note-entry .note-from {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.note-entry p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.note-entry .note-time {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--ink-soft);
+  margin-top: 6px;
+}
+.note-entry .note-del {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+  width: 24px; height: 24px;
+}
+.note-entry .note-del svg { width: 13px; height: 13px; fill: currentColor; }
+
+/* ---- Bucket list ---- */
+.bucket-add-row {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+}
+.bucket-add-row .field-input { margin: 0; }
+.bucket-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.bucket-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+}
+.bucket-check {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--field-border);
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--field-bg);
+}
+.bucket-check svg { width: 12px; height: 12px; fill: none; stroke: var(--accent-ink); stroke-width: 3; opacity: 0; }
+.bucket-item.is-done .bucket-check { background: var(--accent); border-color: var(--accent); }
+.bucket-item.is-done .bucket-check svg { opacity: 1; }
+.bucket-item.is-done .bucket-text { text-decoration: line-through; color: var(--ink-soft); }
+.bucket-text { flex: 1; font-size: 0.9rem; }
+.bucket-del {
+  border: none; background: none; color: var(--ink-soft); cursor: pointer;
+  width: 24px; height: 24px; flex-shrink: 0;
+}
+.bucket-del svg { width: 13px; height: 13px; fill: currentColor; }
+.bucket-progress {
+  margin-bottom: var(--sp-4);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.bucket-progress-bar {
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--field-bg);
+  margin-top: 6px;
+  overflow: hidden;
+}
+.bucket-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--r-pill);
+  transition: width var(--dur-med) var(--ease);
+}
+
+/* ---- Gratitude jar ---- */
+.jar-card {
+  text-align: center;
+  padding: var(--sp-6) var(--sp-5);
+  margin-bottom: var(--sp-4);
+}
+.jar-count {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+}
+.jar-count-label {
+  font-size: 0.74rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-bottom: var(--sp-4);
+}
+.jar-draw {
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.92rem;
+  font-style: italic;
+  margin-bottom: var(--sp-4);
+}
+.jar-add-row { display: flex; gap: var(--sp-2); }
+.jar-add-row .field-textarea { margin: 0; min-height: 52px; }
+
+/* ---- Milestone timeline ---- */
+.timeline {
+  position: relative;
+  padding-left: 22px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--divider);
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: var(--sp-5);
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 4px;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--sheet-bg);
+}
+.timeline-date {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.timeline-title { font-weight: 700; margin-bottom: 2px; }
+.timeline-note { font-size: 0.84rem; color: var(--ink-soft); line-height: 1.4; }
+.timeline-del {
+  position: absolute; top: 0; right: 0;
+  border: none; background: none; color: var(--ink-soft); cursor: pointer;
+}
+.timeline-del svg { width: 13px; height: 13px; fill: currentColor; }
