@@ -1,0 +1,187 @@
+/*
+  tokens.css
+  ----------
+  Design tokens for Couple Tools.
+
+  Every theme sets the same set of custom properties, so components
+  never branch on theme name — they just read the variable. Add a
+  new theme by adding one more `body.theme-x { ... }` block here;
+  nothing else in the codebase needs to change.
+*/
+
+:root {
+  /* ---- Type ---- */
+  --font-display: 'Fraunces', Georgia, 'Noto Serif Myanmar', serif;
+  --font-body: 'Manrope', 'Noto Sans Myanmar', system-ui, -apple-system, sans-serif;
+
+  /* ---- Radius ---- */
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+
+  /* ---- Spacing ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 28px;
+  --sp-7: 36px;
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 0.16s;
+  --dur-med: 0.32s;
+  --dur-slow: 0.6s;
+
+  /* ---- Elevation ---- */
+  --shadow-soft: 0 10px 30px rgba(20, 15, 20, 0.10);
+  --shadow-lift: 0 18px 46px rgba(20, 15, 20, 0.16);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  /* ---- Shared layout metrics ---- */
+  --dock-h: 78px;
+
+  /* ---- Safe area ---- */
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+
+  /* ---- Fixed accents (theme independent) ---- */
+  --heart: #d75a6a;
+  --danger: #d1495b;
+  --success: #4c8c6b;
+  --focus-ring: #2f7bd9;
+}
+
+/* ============ LINEN — default ============
+   Warm paper + oxblood ink. Editorial, calm, daylight. */
+body.theme-default {
+  --bg-a: #f2e9dd;
+  --bg-b: #e8d3c1;
+  --bg-angle: 150deg;
+  --ink: #3a2c2c;
+  --ink-soft: #6b5850;
+  --card-bg: rgba(255, 251, 245, 0.46);
+  --card-border: rgba(255, 255, 255, 0.55);
+  --card-blur: 20px;
+  --field-bg: rgba(255, 255, 255, 0.55);
+  --field-border: rgba(58, 44, 44, 0.12);
+  --accent: #a6425a;
+  --accent-ink: #ffffff;
+  --nav-bg: rgba(255, 250, 244, 0.6);
+  --sheet-bg: #efe6da;
+  --sheet-tint: rgba(58, 44, 44, 0.06);
+  --divider: rgba(58, 44, 44, 0.12);
+  --scrollbar: rgba(58, 44, 44, 0.25);
+}
+
+/* ============ BLOOM — pink ============
+   Muted rosewood; romantic without being candy-pink. */
+body.theme-pink {
+  --bg-a: #f6dde1;
+  --bg-b: #eac0cb;
+  --bg-angle: 145deg;
+  --ink: #4a2733;
+  --ink-soft: #7a4c58;
+  --card-bg: rgba(255, 245, 248, 0.5);
+  --card-border: rgba(255, 255, 255, 0.6);
+  --card-blur: 20px;
+  --field-bg: rgba(255, 255, 255, 0.58);
+  --field-border: rgba(74, 39, 51, 0.12);
+  --accent: #8a3a4c;
+  --accent-ink: #ffffff;
+  --nav-bg: rgba(255, 244, 247, 0.62);
+  --sheet-bg: #f6e6ea;
+  --sheet-tint: rgba(74, 39, 51, 0.06);
+  --divider: rgba(74, 39, 51, 0.12);
+  --scrollbar: rgba(74, 39, 51, 0.25);
+}
+
+/* ============ TIDE — ocean ============ */
+body.theme-ocean {
+  --bg-a: #cdeae6;
+  --bg-b: #6fa9b8;
+  --bg-angle: 160deg;
+  --ink: #123138;
+  --ink-soft: #345b63;
+  --card-bg: rgba(240, 251, 250, 0.42);
+  --card-border: rgba(255, 255, 255, 0.55);
+  --card-blur: 20px;
+  --field-bg: rgba(255, 255, 255, 0.5);
+  --field-border: rgba(18, 49, 56, 0.14);
+  --accent: #0f6d6d;
+  --accent-ink: #ffffff;
+  --nav-bg: rgba(232, 250, 248, 0.55);
+  --sheet-bg: #e3f3f1;
+  --sheet-tint: rgba(18, 49, 56, 0.06);
+  --divider: rgba(18, 49, 56, 0.14);
+  --scrollbar: rgba(18, 49, 56, 0.25);
+}
+
+/* ============ DUSK — sunset ============ */
+body.theme-sunset {
+  --bg-a: #5b3358;
+  --bg-b: #d97a45;
+  --bg-angle: 165deg;
+  --ink: #fbeee4;
+  --ink-soft: #e9cfc4;
+  --card-bg: rgba(60, 34, 55, 0.38);
+  --card-border: rgba(255, 235, 220, 0.22);
+  --card-blur: 22px;
+  --field-bg: rgba(0, 0, 0, 0.22);
+  --field-border: rgba(255, 235, 220, 0.18);
+  --accent: #f0995a;
+  --accent-ink: #2c1a25;
+  --nav-bg: rgba(45, 26, 42, 0.5);
+  --sheet-bg: #3a2338;
+  --sheet-tint: rgba(255, 255, 255, 0.05);
+  --divider: rgba(255, 235, 220, 0.15);
+  --scrollbar: rgba(255, 235, 220, 0.3);
+}
+
+/* ============ MIDNIGHT — dark ============ */
+body.theme-dark {
+  --bg-a: #14141c;
+  --bg-b: #1f1e2b;
+  --bg-angle: 160deg;
+  --ink: #f1ede6;
+  --ink-soft: #a9a3ad;
+  --card-bg: rgba(255, 255, 255, 0.045);
+  --card-border: rgba(255, 255, 255, 0.10);
+  --card-blur: 22px;
+  --field-bg: rgba(255, 255, 255, 0.06);
+  --field-border: rgba(255, 255, 255, 0.12);
+  --accent: #e0a45f;
+  --accent-ink: #1a1410;
+  --nav-bg: rgba(18, 17, 25, 0.7);
+  --sheet-bg: #17161f;
+  --sheet-tint: rgba(255, 255, 255, 0.04);
+  --divider: rgba(255, 255, 255, 0.10);
+  --scrollbar: rgba(255, 255, 255, 0.22);
+}
+
+/* ============ PRISM — colorful ============
+   Soft aurora — curated, not saturated rainbow. */
+body.theme-colorful {
+  --bg-a: #e6d6f2;
+  --bg-b: #ffd9c2;
+  --bg-angle: 135deg;
+  --ink: #362b45;
+  --ink-soft: #6a5b7a;
+  --card-bg: rgba(255, 255, 255, 0.4);
+  --card-border: rgba(255, 255, 255, 0.6);
+  --card-blur: 20px;
+  --field-bg: rgba(255, 255, 255, 0.55);
+  --field-border: rgba(54, 43, 69, 0.12);
+  --accent: #7a4fae;
+  --accent-ink: #ffffff;
+  --nav-bg: rgba(255, 250, 250, 0.55);
+  --sheet-bg: #f3e9f6;
+  --sheet-tint: rgba(54, 43, 69, 0.06);
+  --divider: rgba(54, 43, 69, 0.12);
+  --scrollbar: rgba(54, 43, 69, 0.25);
+}

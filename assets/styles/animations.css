@@ -1,0 +1,56 @@
+/*
+  animations.css
+  --------------
+  Small set of shared keyframes. Kept deliberately short: motion in
+  this app is either a page-open transition or a direct response to
+  a tap (like, streak flame, PIN dot) — not decorative background
+  animation.
+*/
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.anim-fade-in { animation: fadeIn var(--dur-med) var(--ease); }
+
+@keyframes popLike {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+.like-toggle.is-liked svg { animation: popLike var(--dur-med) var(--ease); }
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+.is-shaking { animation: shakeError 0.4s var(--ease); }
+
+@keyframes flameFlicker {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08) rotate(-2deg); }
+}
+.streak-flame.is-live svg { animation: flameFlicker 1.8s ease-in-out infinite; }
+
+/* ---- Theme switch transition ---- */
+.theme-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: var(--sheet-bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.26s var(--ease);
+}
+.theme-transition-overlay.is-active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(var(--marquee-dist, -40px)); }
+}
