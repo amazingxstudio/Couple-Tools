@@ -1,0 +1,37 @@
+{
+  "name": "Couple Tools",
+  "short_name": "Couple Tools",
+  "description": "A private daily dashboard for two — photos, streaks, music, and a shared calendar.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "assets/icons/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icons/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#a6425a",
+  "background_color": "#f2e9dd",
+  "display": "standalone",
+  "orientation": "portrait"
+}

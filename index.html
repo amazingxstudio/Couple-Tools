@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Couple Tools</title>
+<meta name="description" content="A private daily dashboard for two.">
+<meta name="theme-color" content="#a6425a">
+
+<!-- iOS PWA support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Couple Tools">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icons/favicon-96x96.png" sizes="96x96">
+<link rel="icon" href="assets/icons/favicon.ico">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/together.css">
+<link rel="stylesheet" href="assets/css/calendar.css">
+<link rel="stylesheet" href="assets/css/settings.css">
+<link rel="stylesheet" href="assets/css/aod.css">
+<link rel="stylesheet" href="assets/css/lock-onboarding.css">
+<link rel="stylesheet" href="assets/css/animations.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.1/jsmediatags.min.js"></script>
+</head>
+<body class="theme-default">
+
+<!-- ===================== BOOT SCREEN ===================== -->
+<div id="bootScreen" class="surface is-open u-center" style="z-index:999;background:linear-gradient(150deg,#f2e9dd,#e8d3c1);">
+  <div class="spinner"></div>
+</div>
+
+<!-- ===================== PIN LOCK ===================== -->
+<div id="lockScreen" class="surface lock-screen">
+  <div class="lock-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm-3 8V7a3 3 0 116 0v3H9z"/></svg></div>
+  <h2 id="lockTitle">Enter PIN</h2>
+  <p class="sub" id="lockSub">This keeps your shared space private.</p>
+  <div class="pin-dots" id="lockDots">
+    <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+  </div>
+  <p class="lock-error" id="lockError"></p>
+  <div class="pin-keypad" id="lockKeypad">
+    <button class="pin-key" data-key="1" type="button">1</button>
+    <button class="pin-key" data-key="2" type="button">2</button>
+    <button class="pin-key" data-key="3" type="button">3</button>
+    <button class="pin-key" data-key="4" type="button">4</button>
+    <button class="pin-key" data-key="5" type="button">5</button>
+    <button class="pin-key" data-key="6" type="button">6</button>
+    <button class="pin-key" data-key="7" type="button">7</button>
+    <button class="pin-key" data-key="8" type="button">8</button>
+    <button class="pin-key" data-key="9" type="button">9</button>
+    <button class="pin-key is-ghost" data-key="clear" type="button">Clear</button>
+    <button class="pin-key" data-key="0" type="button">0</button>
+    <button class="pin-key is-ghost" data-key="back" type="button">&#9003;</button>
+  </div>
+</div>
+
+<!-- ===================== ONBOARDING ===================== -->
+<div id="onboardScreen" class="surface onboard">
+  <div class="onboard-scroll">
+    <div class="onboard-step is-active" data-step="0">
+      <div class="onboard-mark"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.1 4.5 5.6 4a4.9 4.9 0 016.4 2A4.9 4.9 0 0118.4 4c3.5.5 5.2 4.1 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg></div>
+      <h1>Welcome to your shared space</h1>
+      <p class="lede">A private dashboard for the two of you — photos, a daily streak, music, a calendar, and a few small rituals worth keeping. Let's set it up.</p>
+    </div>
+    <div class="onboard-step" data-step="1">
+      <div class="onboard-mark"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4.4 0-9 2.2-9 5v3h18v-3c0-2.8-4.6-5-9-5z"/></svg></div>
+      <h1>Who's this for?</h1>
+      <p class="lede">You can add photos and details later in Settings.</p>
+      <div class="field"><span class="field-label">Partner 1's name</span><input id="onboardName1" class="field-input" type="text" placeholder="e.g. Alex"></div>
+      <div class="field"><span class="field-label">Partner 2's name</span><input id="onboardName2" class="field-input" type="text" placeholder="e.g. Sam"></div>
+    </div>
+    <div class="onboard-step" data-step="2">
+      <div class="onboard-mark"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 2v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-2V2h-2v2H9V2H7zM5 9h14v11H5V9z"/></svg></div>
+      <h1>When did it start?</h1>
+      <p class="lede">This powers your day counter on the home screen. Skip it if you'd rather set it later.</p>
+      <div class="field"><span class="field-label">Start date</span><input id="onboardStartDate" class="field-input" type="date"></div>
+    </div>
+  </div>
+  <div class="onboard-footer">
+    <div class="onboard-dots" id="onboardDots"><span class="is-active"></span><span></span><span></span></div>
+    <div class="btn-row">
+      <button id="onboardBackBtn" class="btn btn-ghost u-hide" type="button" style="flex:0 0 auto;width:auto;padding:14px 18px;">Back</button>
+      <button id="onboardNextBtn" class="btn btn-primary" type="button">Continue</button>
+    </div>
+    <button id="onboardSkipBtn" class="onboard-skip" type="button">Skip for now</button>
+  </div>
+</div>
+
+<!-- ===================== THEME TRANSITION ===================== -->
+<div id="themeTransitionOverlay" class="theme-transition-overlay"></div>
+
+<!-- ===================== APP SHELL ===================== -->
+<div class="app-shell">
+
+  <!-- ---------- HOME ---------- -->
+  <div id="homeScreen" class="home">
+    <div class="u-row" id="profileRow" style="justify-content:space-between;">
+      <button id="avatarBtn1" class="avatar-btn glass" type="button" aria-label="Partner 1"></button>
+      <button id="annivPill" class="anniv-pill glass" type="button">
+        <span class="eyebrow">Together since</span>
+        <span class="value">Tap to begin</span>
+      </button>
+      <button id="avatarBtn2" class="avatar-btn glass" type="button" aria-label="Partner 2"></button>
+    </div>
+
+    <div class="photo-grid">
+      <div class="photo-card glass" id="mainPhotoCard">
+        <div class="photo-fill"></div>
+        <div class="photo-placeholder u-hide">
+          <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 5h3l2-2h6l2 2h3a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2zm8 4a5 5 0 100 10 5 5 0 000-10z"/></svg>
+          <span>Tap to add a photo</span>
+        </div>
+        <button id="likeToggle" class="like-toggle u-hide" type="button" aria-label="Favorite this photo">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.1 4.5 5.6 4a4.9 4.9 0 016.4 2 4.9 4.9 0 016.4-2c3.5.5 5.2 4.1 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>
+        </button>
+        <div class="photo-tap-layer" id="mainPhotoTapLayer"></div>
+      </div>
+      <div class="photo-side">
+        <div class="photo-card glass" id="sidePhotoCard">
+          <div class="photo-fill"></div>
+          <div class="photo-placeholder u-hide">
+            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 5h3l2-2h6l2 2h3a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2zm8 4a5 5 0 100 10 5 5 0 000-10z"/></svg>
+            <span>Up next</span>
+          </div>
+          <div class="photo-tap-layer" id="sidePhotoTapLayer"></div>
+        </div>
+        <div class="photo-side-controls">
+          <button id="galleryPrevBtn" class="icon-btn glass" type="button" aria-label="Previous photo"><svg viewBox="0 0 24 24"><path d="M15 4l-8 8 8 8V4z"/></svg></button>
+          <button id="galleryAddBtn" class="icon-btn glass" type="button" aria-label="Add photo"><svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5z"/></svg></button>
+          <button id="galleryNextBtn" class="icon-btn glass" type="button" aria-label="Next photo"><svg viewBox="0 0 24 24"><path d="M9 4l8 8-8 8V4z"/></svg></button>
+        </div>
+        <input id="galleryAddInput" type="file" accept="image/*" multiple class="visually-hidden">
+      </div>
+    </div>
+
+    <div class="counter-card glass" id="counterCard">
+      <div class="counter-scroll"><span class="counter-scroll-text" id="counterScrollText"></span></div>
+      <div class="counter-stats">
+        <div class="counter-stat"><div class="num" id="counterDays">0</div><div class="lbl">Days</div></div>
+        <div class="counter-stat"><div class="num" id="counterMonths">0</div><div class="lbl">Months</div></div>
+        <div class="counter-stat"><div class="num" id="counterYears">0</div><div class="lbl">Years</div></div>
+      </div>
+    </div>
+
+    <div class="music-card glass u-hide" id="musicCard">
+      <div class="music-top">
+        <div class="album-art" id="albumArt"></div>
+        <div class="song-info">
+          <div class="song-top-row">
+            <div class="song-marquee-mask" id="songMarqueeMask"><span class="song-marquee" id="songMarquee"></span></div>
+            <div class="song-actions">
+              <button id="favSongBtn" type="button" aria-label="Favorite song"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.1 4.5 5.6 4a4.9 4.9 0 016.4 2 4.9 4.9 0 016.4-2c3.5.5 5.2 4.1 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg></button>
+              <button id="songListBtn" type="button" aria-label="Playlist"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 6h16v2H4zm0 5h10v2H4zm0 5h10v2H4zm12-5v8l6-4-6-4z"/></svg></button>
+              <button id="addSongBtn" type="button" aria-label="Add song"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5z"/></svg></button>
+            </div>
+          </div>
+          <div class="visualizer">
+            <span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span>
+          </div>
+        </div>
+      </div>
+      <div class="music-controls">
+        <button id="shuffleBtn" class="music-btn" type="button" aria-label="Shuffle"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17 3l4 4-4 4V8h-3.6l-2-2H17V3zM3 6h5.4l9.2 12H21v3l-4-4-4 4v-3h-2.6L5.2 6H3V6zm0 12h4l1.5-2H3v2z"/></svg></button>
+        <button id="prevSongBtn" class="music-btn" type="button" aria-label="Previous song"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+        <button id="playPauseBtn" class="music-btn play" type="button" aria-label="Play or pause"><svg id="playPauseIcon" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button>
+        <button id="nextSongBtn" class="music-btn" type="button" aria-label="Next song"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 6h2v12h-2zM6 6l8.5 6L6 18V6z"/></svg></button>
+        <button id="loopBtn" class="music-btn" type="button" aria-label="Loop"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 7h8V4l5 4-5 4V9H7a2 2 0 00-2 2v3H3v-3a4 4 0 014-4zm10 10H9v3l-5-4 5-4v3h8a2 2 0 002-2v-3h2v3a4 4 0 01-4 4z"/></svg></button>
+      </div>
+      <input id="addSongInput" type="file" accept="audio/*" multiple class="visually-hidden">
+      <audio id="audioPlayer"></audio>
+    </div>
+
+    <button id="favoritesBtn" class="icon-btn glass" type="button" aria-label="Favorites" style="position:absolute;top:calc(var(--safe-t) + 14px);right:14px;">
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.1 4.5 5.6 4a4.9 4.9 0 016.4 2 4.9 4.9 0 016.4-2c3.5.5 5.2 4.1 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>
+    </button>
+    <button id="openAodBtn" class="icon-btn glass" type="button" aria-label="Always-on display" style="position:absolute;top:calc(var(--safe-t) + 14px);left:14px;">
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v5.6l4 2.4-.8 1.3-4.7-2.8V7h1.5z"/></svg>
+    </button>
+
+  </div>
+
+  <!-- ---------- CALENDAR ---------- -->
+  <div id="calendarScreen" class="surface">
+    <div class="sheet-header">
+      <h2>Calendar</h2>
+      <button id="calendarCloseBtn" class="icon-btn" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="cal-nav">
+      <button id="calPrevBtn" class="icon-btn" type="button" aria-label="Previous month"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M15 4l-8 8 8 8V4z"/></svg></button>
+      <h3 id="calMonthLabel">Month</h3>
+      <button id="calNextBtn" class="icon-btn" type="button" aria-label="Next month"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 4l8 8-8 8V4z"/></svg></button>
+    </div>
+    <div class="cal-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+    <div class="cal-grid" id="calGrid"></div>
+
+    <div class="cal-detail surface-scroll" id="calDetail">
+      <div class="cal-detail-date" id="calDetailDate"></div>
+
+      <div class="section">
+        <div class="section-title">Notes</div>
+        <div class="note-cat-row" id="noteCatRow"></div>
+        <div class="field" style="margin-bottom:var(--sp-2);">
+          <textarea id="calNoteInput" class="field-textarea" placeholder="Write a note for this day…" style="min-height:56px;"></textarea>
+        </div>
+        <button id="calAddNoteBtn" class="btn btn-ghost btn-sm" type="button" style="margin-bottom:var(--sp-3);">Add note</button>
+        <div id="calNotesList"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Memories</div>
+        <button id="calAddMemoryBtn" class="btn btn-ghost btn-sm" type="button">Add photo</button>
+        <input id="calMemoryInput" type="file" accept="image/*" multiple class="visually-hidden">
+        <div class="memory-grid" id="calMemoryGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- TOGETHER ---------- -->
+  <div id="togetherScreen" class="surface">
+    <div class="sheet-header">
+      <h2>Together</h2>
+      <button id="togetherCloseBtn" class="icon-btn" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="together-tabs chip-row" id="togetherTabs"></div>
+    <div class="surface-scroll">
+      <div class="sheet-body">
+
+        <div class="together-panel is-active" data-panel="question">
+          <div class="question-card card">
+            <div class="question-eyebrow">Today's question</div>
+            <div class="question-text" id="dqText"></div>
+            <div class="chip-row" id="dqWhoToggle" style="justify-content:center;margin-bottom:var(--sp-3);">
+              <button class="chip is-active" data-who="1" type="button">Partner 1</button>
+              <button class="chip" data-who="2" type="button">Partner 2</button>
+            </div>
+            <div class="question-answer-row">
+              <textarea id="dqAnswerInput" class="field-textarea" placeholder="Your answer…"></textarea>
+            </div>
+            <button id="dqSubmitBtn" class="btn btn-primary btn-sm" type="button" style="margin-top:var(--sp-3);width:100%;">Share answer</button>
+          </div>
+          <div class="question-log" id="dqLog"></div>
+        </div>
+
+        <div class="together-panel" data-panel="notes">
+          <div class="note-composer">
+            <textarea id="noteComposerInput" class="field-textarea" placeholder="Leave a note…"></textarea>
+          </div>
+          <div class="chip-row" id="noteWhoToggle" style="margin-bottom:var(--sp-3);">
+            <button class="chip is-active" data-who="1" type="button">From Partner 1</button>
+            <button class="chip" data-who="2" type="button">From Partner 2</button>
+          </div>
+          <button id="noteSubmitBtn" class="btn btn-primary btn-sm" type="button" style="margin-bottom:var(--sp-4);width:100%;">Post note</button>
+          <div class="note-wall" id="noteWall"></div>
+        </div>
+
+        <div class="together-panel" data-panel="bucket">
+          <div class="bucket-progress">
+            <span id="bucketProgressLabel"></span>
+            <div class="bucket-progress-bar"><div class="bucket-progress-fill" id="bucketProgressFill"></div></div>
+          </div>
+          <div class="bucket-add-row">
+            <input id="bucketInput" class="field-input" type="text" placeholder="Add something to the list…">
+            <button id="bucketAddBtn" class="btn btn-primary btn-sm" type="button" style="width:auto;">Add</button>
+          </div>
+          <div class="bucket-list" id="bucketList"></div>
+        </div>
+
+        <div class="together-panel" data-panel="jar">
+          <div class="jar-card card">
+            <div class="jar-count" id="jarCount">0</div>
+            <div class="jar-count-label" id="jarCountLabel">notes in the jar</div>
+            <div class="jar-draw" id="jarDrawCard">
+              <span id="jarDrawText">Add a few notes, then draw one at random.</span>
+            </div>
+            <button id="jarDrawBtn" class="btn btn-ghost btn-sm" type="button" style="width:100%;">Pull a note</button>
+          </div>
+          <div class="jar-add-row">
+            <textarea id="jarInput" class="field-textarea" placeholder="Something you appreciate about them…"></textarea>
+          </div>
+          <button id="jarAddBtn" class="btn btn-primary btn-sm" type="button" style="width:100%;margin-top:var(--sp-2);">Drop it in the jar</button>
+        </div>
+
+        <div class="together-panel" data-panel="milestones">
+          <div class="field"><span class="field-label">Date</span><input id="milestoneDateInput" class="field-input" type="date"></div>
+          <div class="field"><span class="field-label">What happened</span><input id="milestoneTitleInput" class="field-input" type="text" placeholder="e.g. First trip together"></div>
+          <div class="field"><span class="field-label">Note (optional)</span><textarea id="milestoneNoteInput" class="field-textarea" style="min-height:56px;"></textarea></div>
+          <button id="milestoneAddBtn" class="btn btn-primary btn-sm" type="button" style="width:100%;margin-bottom:var(--sp-5);">Add to timeline</button>
+          <div id="milestoneTimeline"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- SETTINGS ---------- -->
+  <div id="settingsScreen" class="surface">
+    <div class="sheet-header">
+      <h2>Settings</h2>
+      <button id="settingsCloseBtn" class="icon-btn" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="surface-scroll">
+      <div class="sheet-body">
+
+        <div class="section">
+          <div class="section-title">Profile</div>
+          <div class="profile-toggle">
+            <button data-profile="1" class="is-active" type="button">Partner 1</button>
+            <button data-profile="2" type="button">Partner 2</button>
+          </div>
+          <div class="avatar-upload" id="setAvatarPreview">
+            <input id="setAvatarInput" type="file" accept="image/*">
+          </div>
+          <div class="field"><span class="field-label">Name</span><input id="setName" class="field-input" type="text"></div>
+          <div class="field"><span class="field-label">Nickname</span><input id="setNickname" class="field-input" type="text"></div>
+          <div class="field"><span class="field-label">Birthday</span><input id="setBirthday" class="field-input" type="date"></div>
+          <div class="field"><span class="field-label">Telegram username</span><input id="setTelegram" class="field-input" type="text" placeholder="username"></div>
+          <div class="field"><span class="field-label">Email</span><input id="setEmail" class="field-input" type="email"></div>
+          <div class="field">
+            <span class="field-label">Phone numbers</span>
+            <div class="u-row u-gap-2">
+              <input id="setPhoneInput" class="field-input" type="tel" placeholder="Add a number">
+              <button id="setPhoneAddBtn" class="btn btn-ghost btn-sm" type="button" style="width:auto;">Add</button>
+            </div>
+            <div class="tag-list" id="setPhoneTags"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Your story</div>
+          <div class="field"><span class="field-label">Start date</span><input id="setStartDate" class="field-input" type="date"></div>
+          <div class="field"><span class="field-label">A line under your day counter</span><textarea id="setScrollText" class="field-textarea" style="min-height:56px;"></textarea></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Appearance</div>
+          <div class="theme-row" id="themeRow"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Privacy</div>
+          <div class="lock-toggle-row">
+            <div>
+              <p style="font-weight:700;font-size:.88rem;">PIN lock</p>
+              <p class="u-muted" style="font-size:.78rem;">Require a 4-digit PIN to open the app.</p>
+            </div>
+            <div id="lockSwitch" class="switch" role="switch" tabindex="0"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Backend &amp; Telegram bot</div>
+          <div class="sync-card card">
+            <div class="sync-status-row">
+              <span class="sync-dot is-planned"></span>
+              <p>Planned — not connected yet</p>
+            </div>
+            <p class="sync-desc">Once the backend is live, this is where your data will sync between both your phones and where a Telegram bot can send reminders, streak nudges, and let you check in from the chat. For now everything stays only on this device.</p>
+            <button id="connectTelegramBtn" class="btn btn-ghost btn-sm" type="button" style="width:100%;">Connect Telegram</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Backup</div>
+          <div class="btn-row" style="margin-bottom:var(--sp-2);">
+            <button id="exportBackupBtn" class="btn btn-ghost btn-sm" type="button">Export backup</button>
+            <button id="importBackupBtn" class="btn btn-ghost btn-sm" type="button">Import backup</button>
+          </div>
+          <input id="importBackupInput" type="file" accept="application/json" class="visually-hidden">
+          <p class="field-hint">Saves everything — photos, songs, notes — into one file you can keep or move to a new device.</p>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Danger zone</div>
+          <div class="danger-zone">
+            <p>Permanently erase every photo, song, note, and setting on this device.</p>
+            <button id="resetAllBtn" class="btn btn-danger btn-sm" type="button" style="width:100%;">Erase all data</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">About</div>
+          <div class="about-row"><span>App</span><span>Couple Tools</span></div>
+          <div class="about-row"><span>Data storage</span><span>On this device only</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- AOD ---------- -->
+  <div id="aodScreen" class="surface surface-immersive aod">
+    <button id="aodCloseBtn" class="icon-btn on-dark aod-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+
+    <div class="aod-clock-wrap">
+      <div id="aodLineClock" class="u-hide">
+        <div class="c-type-2" id="aodLineTime">--:--</div>
+        <div class="aod-date" id="aodLineDate"></div>
+      </div>
+      <div id="aodBoxedClock" class="u-hide">
+        <div class="c-type-4" id="aodBoxedTime">--:--</div>
+        <div class="aod-date" id="aodBoxedDate"></div>
+      </div>
+      <div id="aodFramedClock" class="aod-framed-clock u-hide">
+        <div class="time-text" id="aodFramedTime">--:--</div>
+        <div class="date-text" id="aodFramedDate"></div>
+      </div>
+    </div>
+
+    <div class="aod-toolbar">
+      <button id="aodSettingsBtn" class="icon-btn on-dark" type="button" aria-label="AOD settings"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 8a4 4 0 100 8 4 4 0 000-8zm8.9 3a7.6 7.6 0 000 2l2 1.5-2 3.4-2.3-.9a7.9 7.9 0 01-1.8 1l-.3 2.5H9.5l-.3-2.5a7.9 7.9 0 01-1.8-1l-2.3.9-2-3.4L5 13a7.6 7.6 0 000-2L3 9.5l2-3.4 2.3.9a7.9 7.9 0 011.8-1L9.4 3.5h5.2l.3 2.5a7.9 7.9 0 011.8 1l2.3-.9 2 3.4-2 1.5z"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ---------- IMAGE VIEWER ---------- -->
+  <div id="imageViewer" class="surface surface-immersive image-viewer">
+    <button id="deletePhotoBtn" class="icon-btn on-dark" type="button" aria-label="Delete photo" style="position:absolute;top:calc(var(--safe-t) + 14px);left:18px;">
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 7h12l-1 13H7L6 7zm3-4h6l1 2H8l1-2z"/></svg>
+    </button>
+    <button id="closeImageViewerBtn" class="icon-btn on-dark" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <img id="fullImage" src="" alt="Full screen photo">
+  </div>
+
+  <!-- ---------- STREAK FLOATING BADGE ---------- -->
+  <button id="streakFab" class="streak-fab is-inactive" type="button" style="right:14px;bottom:calc(var(--safe-b) + var(--dock-h) + 14px);" aria-label="Streak">
+    <span class="streak-flame" id="streakFabIcon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c1 4-3 5-3 9a3 3 0 006 0c0-1-.4-2-1-3 2 1 3 3 3 5a5 5 0 01-10 0c0-4 3-6 5-11z"/></svg></span>
+    <span class="streak-fab-num" id="streakFabNum">0</span>
+  </button>
+
+  <!-- ---------- BOTTOM DOCK ---------- -->
+  <nav class="dock">
+    <button id="navHomeBtn" class="dock-btn is-active" type="button"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"/></svg><span>Home</span></button>
+    <button id="navCalendarBtn" class="dock-btn" data-target="calendarScreen" type="button"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 2v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-2V2h-2v2H9V2H7zM5 9h14v11H5V9z"/></svg><span>Calendar</span></button>
+    <button id="navTogetherBtn" class="dock-btn" data-target="togetherScreen" type="button"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.1 4.5 5.6 4a4.9 4.9 0 016.4 2 4.9 4.9 0 016.4-2c3.5.5 5.2 4.1 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg><span>Together</span></button>
+    <button id="navAodBtn" class="dock-btn" type="button"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v5.6l4 2.4-.8 1.3-4.7-2.8V7h1.5z"/></svg><span>AOD</span></button>
+    <button id="navSettingsBtn" class="dock-btn" data-target="settingsScreen" type="button"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 8a4 4 0 100 8 4 4 0 000-8zm8.9 3a7.6 7.6 0 000 2l2 1.5-2 3.4-2.3-.9a7.9 7.9 0 01-1.8 1l-.3 2.5H9.5l-.3-2.5a7.9 7.9 0 01-1.8-1l-2.3.9-2-3.4L5 13a7.6 7.6 0 000-2L3 9.5l2-3.4 2.3.9a7.9 7.9 0 011.8-1L9.4 3.5h5.2l.3 2.5a7.9 7.9 0 011.8 1l2.3-.9 2 3.4-2 1.5z"/></svg><span>Settings</span></button>
+  </nav>
+
+</div><!-- /.app-shell -->
+
+<!-- ===================== MODALS ===================== -->
+
+<div id="profileViewOverlay" class="modal-overlay">
+  <div class="modal-box" style="position:relative;text-align:center;">
+    <button id="profileViewClose" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <img id="profileViewAvatar" style="width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto 12px;display:none;" alt="">
+    <h3 id="profileViewName" style="border:none;font-size:1.2rem;"></h3>
+    <p id="profileViewNickname" class="u-muted" style="margin-bottom:var(--sp-4);"></p>
+    <div class="about-row"><span>Birthday</span><span id="profileViewBirthday"></span></div>
+    <div class="about-row"><span>Telegram</span><span id="profileViewTelegram"></span></div>
+    <div style="text-align:left;margin-top:var(--sp-3);">
+      <span class="field-label">Phone numbers</span>
+      <div class="tag-list" id="profileViewPhones"></div>
+    </div>
+  </div>
+</div>
+
+<div id="homeBgOverlay" class="modal-overlay">
+  <div class="modal-box">
+    <h3>Wallpaper</h3>
+    <p class="u-muted" style="font-size:.85rem;margin-bottom:var(--sp-4);">Set a custom background behind your home screen.</p>
+    <div class="upload-card">
+      <span class="upload-label">Choose an image</span>
+    </div>
+    <input id="homeBgFileInput" type="file" accept="image/*" class="visually-hidden">
+    <div class="btn-row">
+      <button id="homeBgUploadBtn" class="btn btn-primary btn-sm" type="button">Upload</button>
+      <button id="homeBgResetBtn" class="btn btn-ghost btn-sm" type="button">Reset</button>
+      <button id="homeBgCancelBtn" class="btn btn-ghost btn-sm" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="favoritesOverlay" class="modal-overlay">
+  <div class="modal-box" style="max-height:80dvh;">
+    <button id="favoritesCloseBtn" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h3>Favorites</h3>
+    <div class="empty-state u-hide" id="favoritesEmpty">No favorites yet — tap the heart on a photo.</div>
+    <div class="memory-grid" id="favoritesGrid" style="grid-template-columns:repeat(3,1fr);"></div>
+  </div>
+</div>
+
+<div id="songListOverlay" class="modal-overlay song-list-modal">
+  <div class="modal-box" style="max-height:80dvh;">
+    <button id="songListCloseBtn" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h3>Playlist</h3>
+    <div id="songListItems"></div>
+  </div>
+</div>
+
+<div id="aodSettingsOverlay" class="modal-overlay aod-settings-sheet">
+  <div class="modal-box">
+    <h3>AOD settings</h3>
+    <div class="section-title">Clock style</div>
+    <div class="chip-row" id="aodTypeRow" style="margin-bottom:var(--sp-4);"></div>
+    <div class="section-title">Background</div>
+    <div class="upload-card">
+      <span class="upload-label">Choose an image</span>
+      <input id="aodBgFileInput" type="file" accept="image/*" class="visually-hidden">
+    </div>
+    <div class="btn-row" style="margin-bottom:var(--sp-4);">
+      <button id="aodBgUploadBtn" class="btn btn-ghost btn-sm" type="button">Upload</button>
+      <button id="aodBgResetBtn" class="btn btn-ghost btn-sm" type="button">Reset</button>
+    </div>
+    <button id="aodSettingsDoneBtn" class="btn btn-primary" type="button">Done</button>
+  </div>
+</div>
+
+<div id="streakModal" class="modal-overlay streak-modal">
+  <div class="modal-box" style="position:relative;">
+    <button id="streakModalClose" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="streak-giant-flame"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c1 4-3 5-3 9a3 3 0 006 0c0-1-.4-2-1-3 2 1 3 3 3 5a5 5 0 01-10 0c0-4 3-6 5-11z"/></svg></div>
+    <div class="streak-count-row"><span id="streakModalCount">0</span><span>days</span></div>
+    <div class="streak-level" id="streakModalLevel"></div>
+    <p class="streak-next-hint" id="streakModalHint"></p>
+    <div class="milestone-row" id="milestoneRow"></div>
+    <div class="stat-pills">
+      <div class="stat-pill"><div class="lbl">Peak</div><div class="val" id="streakPeakStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Restores</div><div class="val" id="streakRestoreStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Since</div><div class="val" id="streakSinceStat">-</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="restorePromptOverlay" class="modal-overlay restore-prompt">
+  <div class="modal-box">
+    <h3>Streak at risk</h3>
+    <p id="restorePromptText" style="font-size:.88rem;line-height:1.5;margin-bottom:var(--sp-4);"></p>
+    <div class="btn-row">
+      <button id="restoreUseBtn" class="btn btn-primary btn-sm" type="button">Use a restore</button>
+      <button id="restoreResetBtn" class="btn btn-ghost btn-sm" type="button">Start over</button>
+    </div>
+  </div>
+</div>
+
+<div id="alertOverlay" class="toast-overlay">
+  <div class="toast-box">
+    <p id="alertMessage"></p>
+    <button id="alertOkBtn" class="btn btn-primary btn-sm" type="button">OK</button>
+  </div>
+</div>
+
+<div id="confirmOverlay" class="toast-overlay">
+  <div class="toast-box">
+    <p id="confirmMessage"></p>
+    <div class="btn-row">
+      <button id="confirmYesBtn" class="btn btn-danger btn-sm" type="button">Confirm</button>
+      <button id="confirmNoBtn" class="btn btn-ghost btn-sm" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="snackbar" class="snackbar"></div>
+
+<script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
