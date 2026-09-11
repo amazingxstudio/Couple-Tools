@@ -4,6 +4,12 @@
 import { $, $$, on } from '../../core/dom.js';
 import { Store } from '../../core/state.js';
 import { uid, escapeHtml, ddmmyyyy } from '../../core/utils.js';
+import { attachDatePicker } from '../../core/datepicker.js';
+
+function clearDateField(input) {
+  if (input._dpSetValue) input._dpSetValue('');
+  else input.value = '';
+}
 
 function render() {
   const items = Store.data.together.milestones.slice().sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -11,7 +17,7 @@ function render() {
   wrap.innerHTML = items.length
     ? `<div class="timeline">${items.map((m) => `
         <div class="timeline-item">
-          <button class="timeline-del" data-id="${m.id}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 7h12l-1 13H7L6 7zm3-4h6l1 2H8l1-2z"/></svg></button>
+          <button class="timeline-del" data-id="${m.id}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
           <div class="timeline-date">${ddmmyyyy(m.date)}</div>
           <div class="timeline-title">${escapeHtml(m.title)}</div>
           ${m.note ? `<div class="timeline-note">${escapeHtml(m.note)}</div>` : ''}
@@ -28,7 +34,7 @@ function add() {
   Store.patch((d) => { d.together.milestones.push({ id: uid(), date, title, note }); });
   $('milestoneTitleInput').value = '';
   $('milestoneNoteInput').value = '';
-  $('milestoneDateInput').value = '';
+  clearDateField($('milestoneDateInput'));
   render();
 }
 function remove(id) {
@@ -37,6 +43,7 @@ function remove(id) {
 }
 
 export function initMilestones() {
+  attachDatePicker($('milestoneDateInput'), { title: 'Milestone date', max: new Date().toISOString().slice(0, 10) });
   on($('milestoneAddBtn'), 'click', add);
   render();
   Store.subscribe(render);

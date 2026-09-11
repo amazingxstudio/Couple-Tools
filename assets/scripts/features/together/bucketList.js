@@ -16,7 +16,7 @@ function render() {
         <div class="bucket-item card ${i.done ? 'is-done' : ''}">
           <button class="bucket-check" data-toggle="${i.id}"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></button>
           <span class="bucket-text">${escapeHtml(i.text)}</span>
-          <button class="bucket-del" data-del="${i.id}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 7h12l-1 13H7L6 7zm3-4h6l1 2H8l1-2z"/></svg></button>
+          <button class="bucket-del" data-del="${i.id}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
         </div>`).join('')
     : '<div class="empty-state">Add something you both want to do.</div>';
 

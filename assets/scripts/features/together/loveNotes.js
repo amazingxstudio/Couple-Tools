@@ -21,7 +21,7 @@ function render() {
   wall.innerHTML = notes.length
     ? notes.map((n) => `
         <div class="note-entry card">
-          <button class="note-del" data-id="${n.id}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 7h12l-1 13H7L6 7zm3-4h6l1 2H8l1-2z"/></svg></button>
+          <button class="note-del" data-id="${n.id}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
           <div class="note-from">${escapeHtml(nameFor(n.who))}</div>
           <p>${escapeHtml(n.text)}</p>
           <span class="note-time">${relativeTime(n.ts)}</span>
