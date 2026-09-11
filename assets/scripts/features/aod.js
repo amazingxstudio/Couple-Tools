@@ -167,14 +167,35 @@ function appIconSvg(key) {
 function renderAppLauncher() {
   const ring = $('appLauncherRing');
   if (!ring) return;
-  ring.innerHTML = CONFIG.APP_LAUNCHER.map((app, i) => `
-    <button class="app-orb" type="button" style="--i:${i};--n:${CONFIG.APP_LAUNCHER.length};background:${app.color}" data-key="${app.key}" aria-label="${app.label}">
+  const apps = CONFIG.APP_LAUNCHER;
+  ring.innerHTML = apps.map((app, i) => `
+    <button class="app-orb" type="button" style="background:${app.color}" data-key="${app.key}" aria-label="${app.label}">
       ${app.isBot
         ? `<img src="${app.avatar}" alt="${app.label}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="app-orb-fallback">${app.label.split(' ').map((w) => w[0]).join('').slice(0, 2)}</span>`
         : `<svg viewBox="0 0 24 24">${appIconSvg(app.key)}</svg>`}
       <span class="app-orb-label">${app.label}</span>
     </button>
   `).join('');
+
+  // Positioned here (not in CSS) as a clean quarter-circle arc: a
+  // pure-CSS version of this either needs trig functions CSS can't
+  // rely on everywhere yet, or ends up cramming every orb along a
+  // near-straight line so they overlap and the ones further from the
+  // FAB become impossible to tap — which is exactly what was
+  // happening before this fix.
+  const orbs = ring.querySelectorAll('.app-orb');
+  const n = orbs.length;
+  const radius = 132; // px from the FAB's center to each orb's center
+  orbs.forEach((orb, i) => {
+    const t = n > 1 ? i / (n - 1) : 0.5;
+    const angle = (t * 90) * (Math.PI / 180); // 0° = due left, 90° = due up
+    const tx = -Math.cos(angle) * radius;
+    const ty = -Math.sin(angle) * radius;
+    orb.style.setProperty('--tx', `${tx.toFixed(1)}px`);
+    orb.style.setProperty('--ty', `${ty.toFixed(1)}px`);
+    orb.style.transitionDelay = `${i * 0.03}s`;
+  });
+
   ring.querySelectorAll('.app-orb').forEach((orb) => {
     on(orb, 'click', () => openLauncherApp(orb.dataset.key));
   });
