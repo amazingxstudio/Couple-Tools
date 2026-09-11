@@ -75,15 +75,116 @@
 .aod-framed-clock .time-text { font-family: var(--font-display); font-size: 2.2rem; font-weight: 400; }
 .aod-framed-clock .date-text { font-size: 0.72rem; opacity: 0.7; margin-top: 4px; }
 
-.aod-toolbar {
+/* ---- Quick-launch circle panel ----
+   A FAB in the bottom-right that fans a ring of app shortcuts open
+   around itself. Long-pressing the AOD background (see aod.js) opens
+   the AOD settings sheet instead — the old permanent settings button
+   is gone, so the screen stays clean until you actually need it. */
+.app-launcher {
   position: absolute;
-  bottom: calc(var(--safe-b) + 18px);
-  left: 0; right: 0;
+  right: 20px;
+  bottom: calc(var(--safe-b) + 20px);
+  z-index: 6;
+}
+.app-launcher-fab {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #fff;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  transition: transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.app-launcher-fab svg { width: 22px; height: 22px; position: absolute; transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease); }
+.app-launcher-fab .icon-close { opacity: 0; transform: rotate(-45deg); }
+.app-launcher-fab .icon-grid { opacity: 1; transform: rotate(0); }
+.app-launcher.is-open .app-launcher-fab { background: var(--accent); }
+.app-launcher.is-open .app-launcher-fab .icon-close { opacity: 1; transform: rotate(0); }
+.app-launcher.is-open .app-launcher-fab .icon-grid { opacity: 0; transform: rotate(45deg); }
+
+.app-launcher-ring { position: relative; }
+.app-orb {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.3);
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.22s var(--ease);
+  transition-delay: calc(var(--i) * 0.03s);
+}
+.app-orb svg { width: 22px; height: 22px; }
+.app-orb img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.app-orb-fallback {
+  display: none;
+  width: 100%; height: 100%;
+  align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; font-size: 0.85rem;
+}
+.app-orb-label {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0,0,0,0.55);
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease);
+}
+.app-orb:hover .app-orb-label,
+.app-orb:active .app-orb-label { opacity: 1; }
+
+/* Fan the orbs up in an arc above-left of the FAB once opened. */
+.app-launcher.is-open .app-orb {
+  opacity: 1;
+  pointer-events: auto;
+  transform:
+    translate(
+      calc(-1 * (30px + 58px * ((var(--n) - 1 - var(--i)) / max(var(--n) - 1, 1)))),
+      calc(-1 * (72px + 30px * ((var(--n) - 1 - var(--i)) / max(var(--n) - 1, 1))))
+    )
+    scale(1);
+}
+
+.app-launch-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   gap: var(--sp-3);
-  z-index: 5;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease);
 }
+.app-launch-loader.is-open { display: flex; opacity: 1; }
 
 .aod-settings-sheet .chip-row { margin-bottom: var(--sp-4); }
 .aod-clock-preview {

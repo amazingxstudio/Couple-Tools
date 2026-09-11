@@ -123,8 +123,9 @@ textarea:focus-visible {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  /* leave room for the fixed dock so the last item is never hidden under it */
-  padding-bottom: calc(var(--safe-b) + var(--dock-h) + 10px);
+  /* leave room for the floating dock so the last item is never hidden
+     under it — dock height + its own gap from the edge + a bit of air */
+  padding-bottom: calc(var(--safe-b) + var(--dock-h) + var(--dock-gap) * 2 + 10px);
 }
 
 /* Immersive surfaces (AOD, image viewer) sit above regular pages */

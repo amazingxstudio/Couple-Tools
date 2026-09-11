@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: calc(var(--safe-t) + 14px) var(--sp-4) calc(var(--safe-b) + var(--dock-h));
+  padding: calc(var(--safe-t) + 14px) var(--sp-4) calc(var(--safe-b) + var(--dock-h) + var(--dock-gap) * 2);
   gap: var(--sp-4);
   overflow: hidden;
   background-size: cover;
@@ -320,6 +320,7 @@ audio { display: none; }
   background: color-mix(in srgb, var(--accent) 18%, transparent);
   color: var(--accent);
   flex-shrink: 0;
+  position: relative;
 }
 .streak-flame svg { width: 14px; height: 14px; fill: currentColor; }
 .streak-fab.is-inactive .streak-flame { color: var(--ink-soft); background: var(--field-bg); }
@@ -327,6 +328,31 @@ audio { display: none; }
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.95rem;
+}
+
+/* ---- Growing flame sparks (see streak.js renderFlameSparks) ----
+   The higher the streak's level tier, the more little ember sparks
+   float around the flame — a small always-visible sign of how far a
+   streak has come, not just the plain number underneath it. */
+.flame-spark {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 5px; height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffd88a 0%, var(--accent) 70%);
+  opacity: 0;
+  animation: sparkFloat 2.4s ease-in-out infinite;
+  animation-delay: calc(var(--d) * 1s);
+  transform: rotate(calc(var(--a) * 1deg)) translateY(calc(var(--r) * -1px));
+  pointer-events: none;
+}
+.streak-giant-flame .flame-spark { width: 8px; height: 8px; margin: -4px 0 0 -4px; }
+@keyframes sparkFloat {
+  0% { opacity: 0; transform: rotate(calc(var(--a) * 1deg)) translateY(calc(var(--r) * -1px)) scale(0.5); }
+  30% { opacity: 1; }
+  70% { opacity: 0.85; }
+  100% { opacity: 0; transform: rotate(calc(var(--a) * 1deg)) translateY(calc(var(--r) * -2.1px)) scale(1.1); }
 }
 
 /* ---- Streak detail modal ---- */
@@ -338,6 +364,7 @@ audio { display: none; }
   background: color-mix(in srgb, var(--accent) 16%, transparent);
   color: var(--accent);
   display: flex; align-items: center; justify-content: center;
+  position: relative;
 }
 .streak-giant-flame svg { width: 32px; height: 32px; fill: currentColor; }
 .streak-count-row {
@@ -412,18 +439,29 @@ audio { display: none; }
 .image-viewer {
   background: rgba(6, 4, 5, 0.95);
   display: none;
-  align-items: center;
-  justify-content: center;
 }
 .image-viewer.is-open { display: flex; }
+.iv-viewport {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  touch-action: pan-y;
+}
 .image-viewer img {
   max-width: 92%;
   max-height: 88%;
   border-radius: var(--r-lg);
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .image-viewer .icon-btn {
   position: absolute;
   top: calc(var(--safe-t) + 14px);
   right: 18px;
+  z-index: 3;
 }

@@ -45,14 +45,17 @@
   align-items: center;
   justify-content: center;
   gap: 1px;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-lg);
+  background: var(--field-bg);
+  border: 1px solid transparent;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   position: relative;
+  transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
 }
-.cal-day:hover { background: var(--field-bg); }
-.cal-day.is-today { border: 1.5px solid var(--accent); }
+.cal-day:hover { background: color-mix(in srgb, var(--accent) 10%, var(--field-bg)); transform: translateY(-1px); }
+.cal-day.is-today { border-color: var(--accent); }
 .cal-day.is-selected { background: var(--accent); color: var(--accent-ink); }
 .cal-day .cal-dot {
   width: 4px; height: 4px;
@@ -122,15 +125,103 @@
 }
 .note-item button svg { width: 12px; height: 12px; fill: currentColor; }
 
+/* ---- Note input with the "Add note" button built into the box ---- */
+.note-input-wrap {
+  position: relative;
+  margin-bottom: var(--sp-3);
+}
+.note-input-wrap .field-textarea {
+  min-height: 56px;
+  padding-right: 46px;
+}
+.note-input-send {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+}
+.note-input-send svg { width: 15px; height: 15px; fill: currentColor; }
+.note-input-send:active { transform: scale(0.9); }
+
+/* ---- Memories, grouped by photo aspect ratio (see calendar.js) ---- */
+.memory-list { margin-top: var(--sp-2); }
+.memory-group { margin-bottom: var(--sp-4); }
+.memory-group-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
 .memory-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
-  margin-top: var(--sp-2);
+}
+.memory-thumb-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  cursor: pointer;
 }
 .memory-thumb {
+  width: 100%;
   aspect-ratio: 1;
   border-radius: var(--r-sm);
   object-fit: cover;
+  display: block;
   cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease);
 }
+.memory-thumb-wrap .memory-thumb {
+  height: 100%;
+  border-radius: 0;
+}
+.memory-thumb-wrap.is-selected .memory-thumb { transform: scale(0.86); }
+.memory-thumb-wrap.is-selected {
+  background: var(--accent);
+}
+.memory-thumb-check {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.85);
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.memory-thumb-check svg { width: 11px; height: 11px; fill: #fff; }
+.memory-thumb-wrap.is-selected .memory-thumb-check {
+  opacity: 1;
+  background: var(--accent);
+  border-color: var(--accent-ink);
+}
+.memory-actionbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+  padding: 10px var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--field-bg);
+}
+.memory-actionbar span { font-size: 0.8rem; font-weight: 700; flex: 1; }
+.memory-actionbar .btn svg { margin-right: 4px; vertical-align: -2px; }
