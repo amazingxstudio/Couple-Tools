@@ -301,11 +301,14 @@
 }
 
 /* The header is no longer in normal flow, so give each of its pages
-   room at the top instead — this replaces the old margin-based gap. */
+   room at the top instead — this replaces the old margin-based gap.
+   The extra gap (beyond one dock-gap) exists because .sheet-header's
+   box-shadow (10px offset, 30px blur) reaches well past a single
+   dock-gap and was visibly bleeding onto the content below it. */
 #calendarScreen,
 #togetherScreen,
 #settingsScreen {
-  padding-top: calc(var(--safe-t) + var(--dock-gap) * 2 + var(--topbar-h));
+  padding-top: calc(var(--safe-t) + var(--dock-gap) + var(--topbar-h) + var(--dock-gap) * 2);
 }
 
 .section {
