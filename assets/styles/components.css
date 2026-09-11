@@ -268,15 +268,21 @@
 .swatch-theme-colorful { background: linear-gradient(135deg, #e6d6f2, #ffd9c2); }
 
 /* ---- Sheet header (used by every full-screen page) ----
-   Floats as its own rounded card with a gap from the screen edges,
-   matching the bottom dock, instead of a bar flush against the top. */
+   Fixed and floating exactly like the bottom dock: it sits on top of
+   the page content with a gap on every side, instead of being an
+   in-flow bar with a solid color filling the gap around it. */
 .sheet-header {
+  position: fixed;
+  top: calc(var(--safe-t) + var(--dock-gap));
+  left: var(--dock-gap);
+  right: var(--dock-gap);
+  z-index: 5;
+  height: var(--topbar-h);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-3);
-  margin: calc(var(--safe-t) + var(--dock-gap)) var(--dock-gap) var(--dock-gap);
-  padding: 13px var(--sp-4);
+  padding: 0 var(--sp-4);
   flex-shrink: 0;
   background: var(--nav-bg);
   -webkit-backdrop-filter: blur(24px);
@@ -292,6 +298,14 @@
 }
 .sheet-body {
   padding: var(--sp-4) var(--sp-4) calc(var(--safe-b) + var(--dock-h) + var(--dock-gap) * 2 + 10px);
+}
+
+/* The header is no longer in normal flow, so give each of its pages
+   room at the top instead — this replaces the old margin-based gap. */
+#calendarScreen,
+#togetherScreen,
+#settingsScreen {
+  padding-top: calc(var(--safe-t) + var(--dock-gap) * 2 + var(--topbar-h));
 }
 
 .section {
