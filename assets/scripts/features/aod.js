@@ -3,9 +3,10 @@
 // framed clock style (iOS requires the permission prompt to fire
 // from a direct user gesture, which openAOD() always is here).
 
-import { $, on, openModal, closeModal, snackbar } from '../core/dom.js';
+import { $, on, onLongPress, openModal, closeModal, snackbar } from '../core/dom.js';
 import { Store } from '../core/state.js';
 import { mediaUrl, saveMedia, removeMedia } from '../services/media.service.js';
+import { CONFIG } from '../core/config.js';
 
 let tickTimer = null;
 let gyroActive = false;
@@ -131,9 +132,73 @@ function wireAodBgPicker() {
 }
 
 export function initAOD() {
-  on($('openAodBtn'), 'click', openAOD);
   on($('aodCloseBtn'), 'click', closeAOD);
-  on($('aodSettingsBtn'), 'click', () => { renderClockChips(); openModal('aodSettingsOverlay'); });
   on($('aodSettingsDoneBtn'), 'click', () => closeModal('aodSettingsOverlay'));
+
+  // Long-press anywhere on the AOD background (i.e. not on a button)
+  // opens the AOD settings sheet, instead of a permanent settings
+  // button sitting on the screen the whole time.
+  onLongPress($('aodScreen'), (e) => {
+    if (e.target.closest && e.target.closest('button')) return;
+    renderClockChips();
+    openModal('aodSettingsOverlay');
+  });
+
   wireAodBgPicker();
+  wireAppLauncher();
+}
+
+// ---------------------------------------------------------------------
+// Quick-launch circle panel: a small ring of app shortcuts that pops
+// open from a FAB in the corner of the AOD screen, so a quick check of
+// Telegram/TikTok/YouTube/etc. doesn't require leaving the app fully.
+// ---------------------------------------------------------------------
+
+function appIconSvg(key) {
+  const icons = {
+    telegram: '<path fill="#fff" d="M21.5 4.5L2.7 11.9c-1.3.5-1.3 1.2-.2 1.6l4.8 1.5 1.8 5.6c.2.6.4.8.8.8.4 0 .6-.2.8-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.5c.3-1.3-.5-1.9-1.3-1.4zM8.6 14.1l9.2-5.8c.5-.3.9-.1.6.2l-7.8 7.1-.3 3-1.4-3.8z"/>',
+    tiktok: '<path fill="#fff" d="M16.6 3h-3.1v12.4a2.7 2.7 0 11-2.3-2.7v-3.2a5.9 5.9 0 105.4 5.9V9.2a7.6 7.6 0 004.4 1.4V7.5a4.5 4.5 0 01-4.4-4.5z"/>',
+    youtube: '<path fill="#fff" d="M22 12s0-3.3-.4-4.8a2.8 2.8 0 00-2-2C17.9 5 12 5 12 5s-5.9 0-7.6.2a2.8 2.8 0 00-2 2C2 8.7 2 12 2 12s0 3.3.4 4.8a2.8 2.8 0 002 2C6.1 19 12 19 12 19s5.9 0 7.6-.2a2.8 2.8 0 002-2C22 15.3 22 12 22 12zM10 15.5v-7l6 3.5-6 3.5z"/>',
+    chatgpt: '<path fill="#fff" d="M12 3a5.5 5.5 0 00-5.3 4A5 5 0 004 11.5 5.5 5.5 0 006 20a5.5 5.5 0 005.3-4A5 5 0 0018 12.5 5.5 5.5 0 0012 3zm0 3.5a3 3 0 012.7 4.3l-4.2 2.4v-2.7l2.4-1.4A2 2 0 0012 7.5a2 2 0 00-2 2H8a4 4 0 014-4zm0 9.9a2 2 0 01-2-2 2 2 0 01.9-1.7l2.4 1.4v2.4a3.4 3.4 0 01-1.3.3z"/>',
+  };
+  return icons[key] || '<circle cx="12" cy="12" r="8" fill="#fff"/>';
+}
+
+function renderAppLauncher() {
+  const ring = $('appLauncherRing');
+  if (!ring) return;
+  ring.innerHTML = CONFIG.APP_LAUNCHER.map((app, i) => `
+    <button class="app-orb" type="button" style="--i:${i};--n:${CONFIG.APP_LAUNCHER.length};background:${app.color}" data-key="${app.key}" aria-label="${app.label}">
+      ${app.isBot
+        ? `<img src="${app.avatar}" alt="${app.label}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="app-orb-fallback">${app.label.split(' ').map((w) => w[0]).join('').slice(0, 2)}</span>`
+        : `<svg viewBox="0 0 24 24">${appIconSvg(app.key)}</svg>`}
+      <span class="app-orb-label">${app.label}</span>
+    </button>
+  `).join('');
+  ring.querySelectorAll('.app-orb').forEach((orb) => {
+    on(orb, 'click', () => openLauncherApp(orb.dataset.key));
+  });
+}
+
+function openLauncherApp(key) {
+  const app = CONFIG.APP_LAUNCHER.find((a) => a.key === key);
+  if (!app) return;
+  closeLauncher();
+  const loader = $('appLaunchLoader');
+  loader.classList.add('is-open');
+  setTimeout(() => {
+    window.open(app.url, '_blank', 'noopener');
+    loader.classList.remove('is-open');
+  }, 550);
+}
+
+function closeLauncher() { $('appLauncher').classList.remove('is-open'); }
+
+function wireAppLauncher() {
+  renderAppLauncher();
+  const launcher = $('appLauncher');
+  on($('appLauncherToggle'), 'click', () => launcher.classList.toggle('is-open'));
+  document.addEventListener('click', (e) => {
+    if (launcher.classList.contains('is-open') && !launcher.contains(e.target)) closeLauncher();
+  });
 }

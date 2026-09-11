@@ -177,7 +177,7 @@ export function renderSongList() {
   wrap.innerHTML = list.map((s, i) => `
     <div class="tag-pill" style="width:100%;justify-content:space-between;padding:10px 12px;margin-bottom:8px;${i === curIndex() ? `border-color:var(--accent)` : ''}">
       <span data-play="${i}" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;">${s.favorite ? '\u2605 ' : ''}${escapeAttr(s.name)}</span>
-      <button data-remove="${i}" aria-label="Remove"><svg viewBox="0 0 24 24" width="13" height="13"><path fill="currentColor" d="M6 7h12l-1 13H7L6 7zm3-4h6l1 2H8l1-2z"/></svg></button>
+      <button data-remove="${i}" aria-label="Remove"><svg viewBox="0 0 24 24" width="13" height="13"><path fill="currentColor" d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
     </div>
   `).join('');
   wrap.querySelectorAll('[data-play]').forEach((el) => {

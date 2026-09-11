@@ -1,17 +1,18 @@
 // calendar.js — month grid with notes + memory photos per day, and
 // automatic anniversary / birthday flags read from Settings data.
 
-import { $, $$, on, snackbar } from '../core/dom.js';
+import { $, $$, on, onLongPress, snackbar } from '../core/dom.js';
 import { Store } from '../core/state.js';
 import { CONFIG } from '../core/config.js';
 import { uid, todayStr, ddmmyyyy } from '../core/utils.js';
-import { saveMedia, mediaUrl } from '../services/media.service.js';
+import { saveMedia, mediaUrl, removeMedia } from '../services/media.service.js';
 import { openImageViewerUrl } from './gallery.js';
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 let viewDate = new Date();
 let selectedDate = todayStr();
 let noteCat = CONFIG.NOTE_CATEGORIES[0];
+let memSelection = new Set();
 
 function dateKey(y, m, d) {
   return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
@@ -99,19 +100,107 @@ async function renderDayDetail() {
         <div class="note-item">
           <span class="cat">${n.cat}</span>
           <p>${escapeHtml(n.text)}</p>
-          <button data-del-note="${n.id}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 7h12l-1 13H7L6 7zm3-4h6l1 2H8l1-2z"/></svg></button>
+          <button data-del-note="${n.id}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
         </div>`).join('')
     : '<p class="u-muted" style="font-size:.82rem">No notes yet.</p>';
   notesWrap.querySelectorAll('[data-del-note]').forEach((btn) => on(btn, 'click', () => deleteNote(btn.dataset.delNote)));
 
-  const memGrid = $('calMemoryGrid');
-  if (entry.memories.length) {
-    const urls = await Promise.all(entry.memories.map((id) => mediaUrl(id)));
-    memGrid.innerHTML = urls.map((u) => u ? `<img class="memory-thumb" src="${u}">` : '').join('');
-    $$('img', memGrid).forEach((img) => on(img, 'click', () => openImageViewerUrl(img.src)));
-  } else {
-    memGrid.innerHTML = '';
+  const memGrid = $('calMemoryList');
+  if (memGrid) await renderMemories(entry);
+}
+
+function getImageRatio(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve((img.naturalWidth / img.naturalHeight) || 1);
+    img.onerror = () => resolve(1);
+    img.src = url;
+  });
+}
+
+/** Memories are grouped by how close their aspect ratio is to
+ *  portrait / square / landscape, so a day with a mix of photo
+ *  shapes reads as tidy little albums instead of one long grid. */
+async function renderMemories(entry) {
+  const list = $('calMemoryList');
+  const hint = $('calMemoryHint');
+  exitMemorySelection();
+
+  if (!entry.memories.length) {
+    list.innerHTML = '';
+    hint.classList.add('u-hide');
+    return;
   }
+  hint.classList.remove('u-hide');
+
+  const items = (await Promise.all(entry.memories.map(async (id) => {
+    const url = await mediaUrl(id);
+    if (!url) return null;
+    const ratio = await getImageRatio(url);
+    return { id, url, ratio };
+  }))).filter(Boolean);
+
+  const groups = { Portrait: [], Square: [], Landscape: [] };
+  items.forEach((it) => {
+    if (it.ratio < 0.85) groups.Portrait.push(it);
+    else if (it.ratio > 1.2) groups.Landscape.push(it);
+    else groups.Square.push(it);
+  });
+
+  list.innerHTML = Object.entries(groups)
+    .filter(([, arr]) => arr.length)
+    .map(([label, arr]) => `
+      <div class="memory-group">
+        <div class="memory-group-title">${label} · ${arr.length}</div>
+        <div class="memory-grid">
+          ${arr.map((it) => `
+            <div class="memory-thumb-wrap" data-id="${it.id}">
+              <img class="memory-thumb" src="${it.url}" alt="">
+              <span class="memory-thumb-check"><svg viewBox="0 0 24 24"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+            </div>`).join('')}
+        </div>
+      </div>`).join('');
+
+  $$('.memory-thumb-wrap', list).forEach((wrap) => {
+    on(wrap, 'click', () => {
+      if (memSelection.size) toggleMemSelect(wrap);
+      else openImageViewerUrl(wrap.querySelector('img').src);
+    });
+    onLongPress(wrap, () => toggleMemSelect(wrap));
+  });
+}
+
+function toggleMemSelect(wrap) {
+  const id = wrap.dataset.id;
+  if (memSelection.has(id)) { memSelection.delete(id); wrap.classList.remove('is-selected'); }
+  else { memSelection.add(id); wrap.classList.add('is-selected'); }
+  syncMemActionBar();
+}
+
+function syncMemActionBar() {
+  const bar = $('calMemorySelBar');
+  if (!bar) return;
+  bar.classList.toggle('u-hide', memSelection.size === 0);
+  $('calMemorySelCount').textContent = `${memSelection.size} selected`;
+}
+
+function exitMemorySelection() {
+  memSelection.clear();
+  syncMemActionBar();
+}
+
+async function deleteSelectedMemories() {
+  const ids = Array.from(memSelection);
+  if (!ids.length) return;
+  for (const id of ids) await removeMedia(id);
+  Store.patch((d) => {
+    const e = ensureEntry(d);
+    e.memories = e.memories.filter((mid) => !ids.includes(mid));
+  });
+  exitMemorySelection();
+  await renderDayDetail();
+  renderCalendarGrid();
+  snackbar(ids.length > 1 ? 'Photos deleted' : 'Photo deleted');
 }
 
 function escapeHtml(s) {
@@ -172,6 +261,8 @@ export function initCalendar() {
   const memInput = $('calMemoryInput');
   on($('calAddMemoryBtn'), 'click', () => memInput.click());
   on(memInput, 'change', () => { addMemories(memInput.files); memInput.value = ''; });
+  on($('calMemoryDeleteBtn'), 'click', deleteSelectedMemories);
+  on($('calMemoryCancelSelBtn'), 'click', exitMemorySelection);
 
   renderCalendarGrid();
   renderDayDetail();

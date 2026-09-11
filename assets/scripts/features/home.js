@@ -63,13 +63,13 @@ export function renderCounter() {
 async function openProfileView(which) {
   const p = Store.data[`profile${which}`];
   $('profileViewName').textContent = p.name || `Partner ${which}`;
-  $('profileViewNickname').textContent = p.nickname ? `"${p.nickname}"` : '';
-  $('profileViewBirthday').textContent = p.birthday ? ddmmyyyy(p.birthday) : 'Not set';
-  $('profileViewTelegram').textContent = p.telegram ? '@' + p.telegram.replace(/^@/, '') : 'Not set';
+  $('profileViewNickname').textContent = p.nickname ? `"${p.nickname}"` : 'No nickname yet';
+  $('profileViewBirthday').textContent = p.birthday ? ddmmyyyy(p.birthday) : 'Not added yet';
+  $('profileViewTelegram').textContent = p.telegram ? '@' + p.telegram.replace(/^@/, '') : 'Not added yet';
   const phoneWrap = $('profileViewPhones');
   phoneWrap.innerHTML = p.phones.length
     ? p.phones.map((ph) => `<span class="tag-pill">${escapeHtml(ph)}</span>`).join('')
-    : '<span class="u-muted" style="font-size:.82rem">No phone numbers added</span>';
+    : '<span class="u-muted" style="font-size:.82rem">No phone numbers added yet</span>';
 
   const img = $('profileViewAvatar');
   if (p.avatarId) {

@@ -4,9 +4,11 @@
 
 import { $, $$ } from '../core/dom.js';
 import { Store } from '../core/state.js';
+import { attachDatePicker } from '../core/datepicker.js';
 
 let step = 0;
 const TOTAL_STEPS = 3;
+let datePickerReady = false;
 
 export function shouldOnboard() {
   return !Store.data.onboarded;
@@ -16,6 +18,10 @@ export function startOnboarding(onDone) {
   step = 0;
   render();
   $('onboardScreen').classList.add('is-open');
+  if (!datePickerReady) {
+    datePickerReady = true;
+    attachDatePicker($('onboardStartDate'), { title: 'Start date', max: new Date().toISOString().slice(0, 10) });
+  }
 
   $('onboardNextBtn').onclick = () => {
     if (step === 1) saveNames();
