@@ -50,7 +50,14 @@ export const CONFIG = {
     { key: 'telegram', label: 'Telegram', url: 'https://t.me/', color: '#2AABEE' },
     { key: 'tiktok', label: 'TikTok', url: 'https://www.tiktok.com/', color: '#111111' },
     { key: 'youtube', label: 'YouTube', url: 'https://www.youtube.com/', color: '#FF0000' },
-    { key: 'chatgpt', label: 'ChatGPT', url: 'https://chatgpt.com/', color: '#10A37F' },
+    {
+      key: 'chatgpt',
+      label: 'ChatGPT',
+      url: 'https://chatgpt.com/',
+      color: '#10A37F',
+      isBot: true,
+      avatar: 'assets/icons/apps/chatgpt-logo.png',
+    },
     {
       key: 'nexusduos',
       label: 'Nexus Duos',
