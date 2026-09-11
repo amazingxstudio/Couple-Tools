@@ -9,7 +9,7 @@
 // Bump CACHE_NAME whenever shell files change so old clients pick up
 // the new version instead of serving a stale cache forever.
 
-const CACHE_NAME = 'couple-tools-shell-v5';
+const CACHE_NAME = 'couple-tools-shell-v6';
 
 const SHELL_FILES = [
   './',
@@ -60,6 +60,8 @@ const SHELL_FILES = [
   './assets/icons/apple-touch-icon.png',
   './assets/icons/web-app-manifest-192x192.png',
   './assets/icons/web-app-manifest-512x512.png',
+  './assets/icons/apps/nexusduos-bot.png',
+  './assets/icons/apps/chatgpt-logo.png',
 ];
 
 self.addEventListener('install', (event) => {
