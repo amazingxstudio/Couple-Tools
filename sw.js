@@ -9,7 +9,7 @@
 // Bump CACHE_NAME whenever shell files change so old clients pick up
 // the new version instead of serving a stale cache forever.
 
-const CACHE_NAME = 'couple-tools-shell-v4';
+const CACHE_NAME = 'couple-tools-shell-v5';
 
 const SHELL_FILES = [
   './',
