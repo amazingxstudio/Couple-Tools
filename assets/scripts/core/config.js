@@ -37,6 +37,33 @@ export const CONFIG = {
 
   NOTE_CATEGORIES: ['Note', 'Promise', 'Plan', 'Reminder'],
 
+  // ---- Developer / credits (shown in Settings → About) ----
+  DEVELOPER: {
+    name: 'Aung Myat Minn',
+    team: 'AmazinG X Studio',
+    telegram: 'aung_myat_minn',
+    email: 'aungmyatminnx@gmail.com',
+  },
+
+  // ---- AOD quick-launch circle panel ----
+  APP_LAUNCHER: [
+    { key: 'telegram', label: 'Telegram', url: 'https://t.me/', color: '#2AABEE' },
+    { key: 'tiktok', label: 'TikTok', url: 'https://www.tiktok.com/', color: '#111111' },
+    { key: 'youtube', label: 'YouTube', url: 'https://www.youtube.com/', color: '#FF0000' },
+    { key: 'chatgpt', label: 'ChatGPT', url: 'https://chatgpt.com/', color: '#10A37F' },
+    {
+      key: 'nexusduos',
+      label: 'Nexus Duos',
+      url: 'https://t.me/NexusDuos_bot',
+      color: '#a6425a',
+      isBot: true,
+      avatar: 'assets/icons/apps/nexusduos-bot.png',
+    },
+  ],
+
+  // ---- Special-day notifications ----
+  NOTIFY_DAYS_BEFORE: [3, 1],
+
   DAILY_QUESTIONS: [
     'What moment from this week made you smile?',
     "What's one small thing I did recently that you appreciated?",
@@ -96,6 +123,11 @@ export function defaultAppData() {
     },
 
     sync: { remoteEnabled: false, telegramLinked: false },
+
+    notifications: {
+      enabled: false,       // becomes true once the person grants permission
+      notified: [],         // e.g. "anniv-2026-0" — keys already alerted, so we never repeat one
+    },
   };
 }
 
