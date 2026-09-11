@@ -12,7 +12,10 @@
   padding: 0 var(--sp-4) var(--sp-3);
   overflow-x: auto;
   flex-shrink: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+.together-tabs::-webkit-scrollbar { display: none; }
 .together-panel { display: none; }
 .together-panel.is-active { display: block; }
 

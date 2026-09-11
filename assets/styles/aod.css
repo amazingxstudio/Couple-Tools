@@ -76,13 +76,17 @@
 .aod-framed-clock .date-text { font-size: 0.72rem; opacity: 0.7; margin-top: 4px; }
 
 /* ---- Quick-launch circle panel ----
-   A FAB in the bottom-right that fans a ring of app shortcuts open
-   around itself. Long-pressing the AOD background (see aod.js) opens
-   the AOD settings sheet instead — the old permanent settings button
-   is gone, so the screen stays clean until you actually need it. */
+   A FAB, bottom-center, that fans a ring of app shortcuts open in an
+   arc that wraps around itself (see aod.js renderAppLauncher for the
+   angle math — bottom-center gives it room to swing from due-left to
+   due-right without any orb running off the edge of the screen).
+   Long-pressing the AOD background (see aod.js) opens the AOD
+   settings sheet instead — the old permanent settings button is
+   gone, so the screen stays clean until you actually need it. */
 .app-launcher {
   position: absolute;
-  right: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: calc(var(--safe-b) + 20px);
   z-index: 6;
 }
@@ -135,24 +139,12 @@
   align-items: center; justify-content: center;
   color: #fff; font-weight: 800; font-size: 0.85rem;
 }
+/* Icon-only ring by design — no visible name tag next to each app.
+   The label text still exists in the DOM (see aod.js) purely for
+   screen readers via the button's aria-label; it's never shown. */
 .app-orb-label {
-  position: absolute;
-  right: calc(100% + 8px);
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: #fff;
-  background: rgba(0,0,0,0.55);
-  padding: 3px 8px;
-  border-radius: 999px;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s var(--ease);
+  display: none;
 }
-/* Always show the label once the ring is open (there's no hover on
-   touch), so it's clear what each icon is before you tap it. */
-.app-launcher.is-open .app-orb-label { opacity: 1; }
 
 /* Fan the orbs out in a clean quarter-circle arc above-left of the
    FAB once opened. --tx/--ty are computed in JS (see aod.js
