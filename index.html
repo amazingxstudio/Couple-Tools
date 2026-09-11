@@ -108,7 +108,7 @@
 
   <!-- ---------- HOME ---------- -->
   <div id="homeScreen" class="home">
-    <div class="u-row" id="profileRow" style="justify-content:space-between;">
+    <div class="u-row profile-row" id="profileRow" style="justify-content:space-between;">
       <button id="avatarBtn1" class="avatar-btn glass" type="button" aria-label="Partner 1"></button>
       <button id="annivPill" class="anniv-pill glass" type="button">
         <span class="eyebrow">Together since</span>
@@ -142,6 +142,7 @@
           <button id="galleryPrevBtn" class="icon-btn glass" type="button" aria-label="Previous photo"><svg viewBox="0 0 24 24"><path d="M15 4l-8 8 8 8V4z"/></svg></button>
           <button id="galleryAddBtn" class="icon-btn glass" type="button" aria-label="Add photo"><svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5z"/></svg></button>
           <button id="galleryNextBtn" class="icon-btn glass" type="button" aria-label="Next photo"><svg viewBox="0 0 24 24"><path d="M9 4l8 8-8 8V4z"/></svg></button>
+          <button id="favoritesBtn" class="icon-btn glass" type="button" aria-label="Favorites"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.1 4.5 5.6 4a4.9 4.9 0 016.4 2 4.9 4.9 0 016.4-2c3.5.5 5.2 4.1 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg></button>
         </div>
         <input id="galleryAddInput" type="file" accept="image/*" multiple class="visually-hidden">
       </div>
@@ -184,20 +185,12 @@
       <audio id="audioPlayer"></audio>
     </div>
 
-    <button id="favoritesBtn" class="icon-btn glass" type="button" aria-label="Favorites" style="position:absolute;top:calc(var(--safe-t) + 14px);right:14px;">
-      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.1 4.5 5.6 4a4.9 4.9 0 016.4 2 4.9 4.9 0 016.4-2c3.5.5 5.2 4.1 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>
-    </button>
-    <button id="openAodBtn" class="icon-btn glass" type="button" aria-label="Always-on display" style="position:absolute;top:calc(var(--safe-t) + 14px);left:14px;">
-      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v5.6l4 2.4-.8 1.3-4.7-2.8V7h1.5z"/></svg>
-    </button>
-
   </div>
 
   <!-- ---------- CALENDAR ---------- -->
   <div id="calendarScreen" class="surface">
     <div class="sheet-header">
       <h2>Calendar</h2>
-      <button id="calendarCloseBtn" class="icon-btn" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="cal-nav">
       <button id="calPrevBtn" class="icon-btn" type="button" aria-label="Previous month"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M15 4l-8 8 8 8V4z"/></svg></button>
@@ -213,10 +206,12 @@
       <div class="section">
         <div class="section-title">Notes</div>
         <div class="note-cat-row" id="noteCatRow"></div>
-        <div class="field" style="margin-bottom:var(--sp-2);">
-          <textarea id="calNoteInput" class="field-textarea" placeholder="Write a note for this day…" style="min-height:56px;"></textarea>
+        <div class="note-input-wrap">
+          <textarea id="calNoteInput" class="field-textarea" placeholder="Write a note for this day…"></textarea>
+          <button id="calAddNoteBtn" class="note-input-send" type="button" aria-label="Add note">
+            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+          </button>
         </div>
-        <button id="calAddNoteBtn" class="btn btn-ghost btn-sm" type="button" style="margin-bottom:var(--sp-3);">Add note</button>
         <div id="calNotesList"></div>
       </div>
 
@@ -224,7 +219,16 @@
         <div class="section-title">Memories</div>
         <button id="calAddMemoryBtn" class="btn btn-ghost btn-sm" type="button">Add photo</button>
         <input id="calMemoryInput" type="file" accept="image/*" multiple class="visually-hidden">
-        <div class="memory-grid" id="calMemoryGrid"></div>
+        <p class="u-muted memory-hint u-hide" id="calMemoryHint" style="font-size:.74rem;margin:6px 0 0;">Long-press a photo to select more than one.</p>
+        <div class="memory-list" id="calMemoryList"></div>
+        <div class="memory-actionbar u-hide" id="calMemorySelBar">
+          <span id="calMemorySelCount">0 selected</span>
+          <button id="calMemoryDeleteBtn" class="btn btn-danger btn-sm" type="button">
+            <svg viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            Delete
+          </button>
+          <button id="calMemoryCancelSelBtn" class="btn btn-ghost btn-sm" type="button">Cancel</button>
+        </div>
       </div>
     </div>
   </div>
@@ -233,7 +237,6 @@
   <div id="togetherScreen" class="surface">
     <div class="sheet-header">
       <h2>Together</h2>
-      <button id="togetherCloseBtn" class="icon-btn" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="together-tabs chip-row" id="togetherTabs"></div>
     <div class="surface-scroll">
@@ -310,7 +313,6 @@
   <div id="settingsScreen" class="surface">
     <div class="sheet-header">
       <h2>Settings</h2>
-      <button id="settingsCloseBtn" class="icon-btn" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="surface-scroll">
       <div class="sheet-body">
@@ -322,7 +324,11 @@
             <button data-profile="2" type="button">Partner 2</button>
           </div>
           <div class="avatar-upload" id="setAvatarPreview">
+            <div class="avatar-upload-img" id="setAvatarImg"></div>
             <input id="setAvatarInput" type="file" accept="image/*">
+            <span class="avatar-upload-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 3l-1.8 2H4a2 2 0 00-2 2v11a2 2 0 002 2h16a2 2 0 002-2V7a2 2 0 00-2-2h-3.2L15 3H9zm3 5a5 5 0 110 10 5 5 0 010-10zm0 2a3 3 0 100 6 3 3 0 000-6z"/></svg>
+            </span>
           </div>
           <div class="field"><span class="field-label">Name</span><input id="setName" class="field-input" type="text"></div>
           <div class="field"><span class="field-label">Nickname</span><input id="setNickname" class="field-input" type="text"></div>
@@ -362,6 +368,17 @@
         </div>
 
         <div class="section">
+          <div class="section-title">Notifications</div>
+          <div class="lock-toggle-row">
+            <div>
+              <p style="font-weight:700;font-size:.88rem;">Special-day reminders</p>
+              <p class="u-muted" style="font-size:.78rem;">A gentle alert (with a little chime) a few days before, and on the day of, your anniversary or a birthday.</p>
+            </div>
+            <div id="notifySwitch" class="switch" role="switch" tabindex="0"></div>
+          </div>
+        </div>
+
+        <div class="section">
           <div class="section-title">Backend &amp; Telegram bot</div>
           <div class="sync-card card">
             <div class="sync-status-row">
@@ -397,13 +414,21 @@
           <div class="about-row"><span>Data storage</span><span>On this device only</span></div>
         </div>
 
+        <div class="section">
+          <div class="section-title">Developer</div>
+          <div class="about-row"><span>Developer</span><span id="devName"></span></div>
+          <div class="about-row"><span>Team</span><span id="devTeam"></span></div>
+          <div class="about-row"><span>Telegram</span><a id="devTelegram" href="#" target="_blank" rel="noopener" style="color:var(--accent);font-weight:700;text-decoration:none;"></a></div>
+          <div class="about-row"><span>Email</span><a id="devEmail" href="#" style="color:var(--accent);font-weight:700;text-decoration:none;"></a></div>
+        </div>
+
       </div>
     </div>
   </div>
 
   <!-- ---------- AOD ---------- -->
   <div id="aodScreen" class="surface surface-immersive aod">
-    <button id="aodCloseBtn" class="icon-btn on-dark aod-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button id="aodCloseBtn" class="icon-btn on-dark aod-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
 
     <div class="aod-clock-wrap">
       <div id="aodLineClock" class="u-hide">
@@ -420,22 +445,32 @@
       </div>
     </div>
 
-    <div class="aod-toolbar">
-      <button id="aodSettingsBtn" class="icon-btn on-dark" type="button" aria-label="AOD settings"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 8a4 4 0 100 8 4 4 0 000-8zm8.9 3a7.6 7.6 0 000 2l2 1.5-2 3.4-2.3-.9a7.9 7.9 0 01-1.8 1l-.3 2.5H9.5l-.3-2.5a7.9 7.9 0 01-1.8-1l-2.3.9-2-3.4L5 13a7.6 7.6 0 000-2L3 9.5l2-3.4 2.3.9a7.9 7.9 0 011.8-1L9.4 3.5h5.2l.3 2.5a7.9 7.9 0 011.8 1l2.3-.9 2 3.4-2 1.5z"/></svg></button>
+    <div class="app-launcher" id="appLauncher">
+      <div class="app-launcher-ring" id="appLauncherRing"></div>
+      <button id="appLauncherToggle" class="app-launcher-fab" type="button" aria-label="Quick apps">
+        <svg class="icon-grid" viewBox="0 0 24 24"><path fill="currentColor" d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="app-launch-loader" id="appLaunchLoader">
+      <div class="spinner spinner-lg"></div>
+      <span>Opening…</span>
     </div>
   </div>
 
   <!-- ---------- IMAGE VIEWER ---------- -->
   <div id="imageViewer" class="surface surface-immersive image-viewer">
     <button id="deletePhotoBtn" class="icon-btn on-dark" type="button" aria-label="Delete photo" style="position:absolute;top:calc(var(--safe-t) + 14px);left:18px;">
-      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 7h12l-1 13H7L6 7zm3-4h6l1 2H8l1-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
     </button>
-    <button id="closeImageViewerBtn" class="icon-btn on-dark" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <img id="fullImage" src="" alt="Full screen photo">
+    <button id="closeImageViewerBtn" class="icon-btn on-dark" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="iv-viewport" id="ivViewport">
+      <img id="fullImage" src="" alt="Full screen photo">
+    </div>
   </div>
 
   <!-- ---------- STREAK FLOATING BADGE ---------- -->
-  <button id="streakFab" class="streak-fab is-inactive" type="button" style="right:14px;bottom:calc(var(--safe-b) + var(--dock-h) + 14px);" aria-label="Streak">
+  <button id="streakFab" class="streak-fab is-inactive" type="button" style="right:14px;bottom:calc(var(--safe-b) + var(--dock-h) + var(--dock-gap) * 2 + 10px);" aria-label="Streak">
     <span class="streak-flame" id="streakFabIcon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c1 4-3 5-3 9a3 3 0 006 0c0-1-.4-2-1-3 2 1 3 3 3 5a5 5 0 01-10 0c0-4 3-6 5-11z"/></svg></span>
     <span class="streak-fab-num" id="streakFabNum">0</span>
   </button>
@@ -446,7 +481,7 @@
     <button id="navCalendarBtn" class="dock-btn" data-target="calendarScreen" type="button"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 2v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-2V2h-2v2H9V2H7zM5 9h14v11H5V9z"/></svg><span>Calendar</span></button>
     <button id="navTogetherBtn" class="dock-btn" data-target="togetherScreen" type="button"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.1 4.5 5.6 4a4.9 4.9 0 016.4 2 4.9 4.9 0 016.4-2c3.5.5 5.2 4.1 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg><span>Together</span></button>
     <button id="navAodBtn" class="dock-btn" type="button"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v5.6l4 2.4-.8 1.3-4.7-2.8V7h1.5z"/></svg><span>AOD</span></button>
-    <button id="navSettingsBtn" class="dock-btn" data-target="settingsScreen" type="button"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 8a4 4 0 100 8 4 4 0 000-8zm8.9 3a7.6 7.6 0 000 2l2 1.5-2 3.4-2.3-.9a7.9 7.9 0 01-1.8 1l-.3 2.5H9.5l-.3-2.5a7.9 7.9 0 01-1.8-1l-2.3.9-2-3.4L5 13a7.6 7.6 0 000-2L3 9.5l2-3.4 2.3.9a7.9 7.9 0 011.8-1L9.4 3.5h5.2l.3 2.5a7.9 7.9 0 011.8 1l2.3-.9 2 3.4-2 1.5z"/></svg><span>Settings</span></button>
+    <button id="navSettingsBtn" class="dock-btn" data-target="settingsScreen" type="button"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg><span>Settings</span></button>
   </nav>
 
 </div><!-- /.app-shell -->
@@ -455,7 +490,7 @@
 
 <div id="profileViewOverlay" class="modal-overlay">
   <div class="modal-box" style="position:relative;text-align:center;">
-    <button id="profileViewClose" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button id="profileViewClose" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
     <img id="profileViewAvatar" style="width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto 12px;display:none;" alt="">
     <h3 id="profileViewName" style="border:none;font-size:1.2rem;"></h3>
     <p id="profileViewNickname" class="u-muted" style="margin-bottom:var(--sp-4);"></p>
@@ -486,16 +521,34 @@
 
 <div id="favoritesOverlay" class="modal-overlay">
   <div class="modal-box" style="max-height:80dvh;">
-    <button id="favoritesCloseBtn" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button id="favoritesCloseBtn" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
     <h3>Favorites</h3>
     <div class="empty-state u-hide" id="favoritesEmpty">No favorites yet — tap the heart on a photo.</div>
     <div class="memory-grid" id="favoritesGrid" style="grid-template-columns:repeat(3,1fr);"></div>
   </div>
 </div>
 
+<div id="galleryManagerOverlay" class="modal-overlay">
+  <div class="modal-box" style="max-height:86dvh;">
+    <button id="galleryManagerCloseBtn" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h3>All photos</h3>
+    <p class="u-muted" style="font-size:0.78rem;margin-top:-10px;margin-bottom:var(--sp-3);">Tap a photo to view it. Long-press to select more than one.</p>
+    <div class="empty-state u-hide" id="galleryManagerEmpty">No photos yet.</div>
+    <div class="memory-grid" id="galleryManagerGrid" style="grid-template-columns:repeat(3,1fr);"></div>
+    <div class="memory-actionbar u-hide" id="galleryManagerActionBar">
+      <span id="galleryManagerSelCount">0 selected</span>
+      <button id="galleryManagerDeleteBtn" class="btn btn-danger btn-sm" type="button">
+        <svg viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        Delete
+      </button>
+      <button id="galleryManagerCancelSelBtn" class="btn btn-ghost btn-sm" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div id="songListOverlay" class="modal-overlay song-list-modal">
   <div class="modal-box" style="max-height:80dvh;">
-    <button id="songListCloseBtn" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button id="songListCloseBtn" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
     <h3>Playlist</h3>
     <div id="songListItems"></div>
   </div>
@@ -521,8 +574,8 @@
 
 <div id="streakModal" class="modal-overlay streak-modal">
   <div class="modal-box" style="position:relative;">
-    <button id="streakModalClose" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <div class="streak-giant-flame"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c1 4-3 5-3 9a3 3 0 006 0c0-1-.4-2-1-3 2 1 3 3 3 5a5 5 0 01-10 0c0-4 3-6 5-11z"/></svg></div>
+    <button id="streakModalClose" class="icon-btn modal-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="streak-giant-flame" id="streakGiantFlame"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c1 4-3 5-3 9a3 3 0 006 0c0-1-.4-2-1-3 2 1 3 3 3 5a5 5 0 01-10 0c0-4 3-6 5-11z"/></svg></div>
     <div class="streak-count-row"><span id="streakModalCount">0</span><span>days</span></div>
     <div class="streak-level" id="streakModalLevel"></div>
     <p class="streak-next-hint" id="streakModalHint"></p>

@@ -9,7 +9,7 @@
 // Bump CACHE_NAME whenever shell files change so old clients pick up
 // the new version instead of serving a stale cache forever.
 
-const CACHE_NAME = 'couple-tools-shell-v1';
+const CACHE_NAME = 'couple-tools-shell-v2';
 
 const SHELL_FILES = [
   './',
@@ -30,7 +30,9 @@ const SHELL_FILES = [
   './assets/scripts/core/dom.js',
   './assets/scripts/core/state.js',
   './assets/scripts/core/utils.js',
+  './assets/scripts/core/datepicker.js',
   './assets/scripts/services/audio.service.js',
+  './assets/scripts/services/chime.service.js',
   './assets/scripts/services/db.js',
   './assets/scripts/services/media.service.js',
   './assets/scripts/services/storage.service.js',
@@ -42,6 +44,7 @@ const SHELL_FILES = [
   './assets/scripts/features/home.js',
   './assets/scripts/features/lock.js',
   './assets/scripts/features/music.js',
+  './assets/scripts/features/notifications.js',
   './assets/scripts/features/onboarding.js',
   './assets/scripts/features/settings.js',
   './assets/scripts/features/streak.js',
