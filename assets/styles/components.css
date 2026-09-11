@@ -271,7 +271,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-3);
-  margin: calc(var(--safe-t) + var(--dock-gap)) var(--dock-gap) 0;
+  margin: calc(var(--safe-t) + var(--dock-gap)) var(--dock-gap) var(--dock-gap);
   padding: 13px var(--sp-4);
   flex-shrink: 0;
   background: var(--nav-bg);
@@ -355,6 +355,7 @@
 }
 
 .modal-box {
+  position: relative;
   width: 100%;
   max-width: 440px;
   max-height: min(86dvh, 720px);
