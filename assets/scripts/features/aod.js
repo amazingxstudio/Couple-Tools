@@ -177,19 +177,23 @@ function renderAppLauncher() {
     </button>
   `).join('');
 
-  // Positioned here (not in CSS) as a clean quarter-circle arc: a
+  // Positioned here (not in CSS) as a clean half-circle arc: a
   // pure-CSS version of this either needs trig functions CSS can't
   // rely on everywhere yet, or ends up cramming every orb along a
   // near-straight line so they overlap and the ones further from the
   // FAB become impossible to tap — which is exactly what was
-  // happening before this fix.
+  // happening before this fix. The FAB sits bottom-center (see
+  // aod.css .app-launcher) so this arc can sweep the full upper
+  // half-circle — due-left, up through due-up, to due-right — and
+  // every orb still lands on screen, wrapping around the button
+  // instead of only opening toward one corner.
   const orbs = ring.querySelectorAll('.app-orb');
   const n = orbs.length;
-  const radius = 132; // px from the FAB's center to each orb's center
+  const radius = 118; // px from the FAB's center to each orb's center
   orbs.forEach((orb, i) => {
     const t = n > 1 ? i / (n - 1) : 0.5;
-    const angle = (t * 90) * (Math.PI / 180); // 0° = due left, 90° = due up
-    const tx = -Math.cos(angle) * radius;
+    const angle = (180 - t * 180) * (Math.PI / 180); // 180° = due left, 90° = due up, 0° = due right
+    const tx = Math.cos(angle) * radius;
     const ty = -Math.sin(angle) * radius;
     orb.style.setProperty('--tx', `${tx.toFixed(1)}px`);
     orb.style.setProperty('--ty', `${ty.toFixed(1)}px`);
