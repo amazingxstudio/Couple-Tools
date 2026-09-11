@@ -1,13 +1,16 @@
 // sw.js — app-shell caching for offline use.
 //
-// The previous version of this app shipped an empty service worker
-// file: it registered successfully but cached nothing, so the app
-// had no real offline support despite claiming to be a PWA. This
-// version precaches the shell and serves it cache-first, falling
-// back to the network for anything not yet cached.
+// Fetch strategy: stale-while-revalidate. Every request is served from
+// cache instantly if present (fast, works offline), while a network
+// fetch runs in the background to refresh that cache entry for next
+// time. This means a normal content change (editing a CSS/JS file,
+// swapping an icon) does NOT require bumping CACHE_NAME anymore — the
+// next time the app is opened online, the cache quietly updates itself,
+// and the change shows up on the load after that.
 //
-// Bump CACHE_NAME whenever shell files change so old clients pick up
-// the new version instead of serving a stale cache forever.
+// You only need to bump CACHE_NAME when the SHELL_FILES list itself
+// changes shape — adding or removing a precached file path — so a
+// fresh install can precache the new set from scratch.
 
 const CACHE_NAME = 'couple-tools-shell-v6';
 
@@ -90,18 +93,23 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
 
   event.respondWith(
-    caches.match(req).then((cached) => {
-      if (cached) return cached;
-      return fetch(req)
+    caches.open(CACHE_NAME).then(async (cache) => {
+      const cached = await cache.match(req);
+
+      // Always try the network in the background and refresh the
+      // cache entry, whether or not we already have a cached copy.
+      const network = fetch(req)
         .then((res) => {
-          // Opportunistically cache same-origin shell files fetched later.
           if (res.ok && new URL(req.url).origin === self.location.origin) {
-            const copy = res.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+            cache.put(req, res.clone());
           }
           return res;
         })
-        .catch(() => cached);
+        .catch(() => null);
+
+      // Cached copy wins for speed (and offline); otherwise wait on
+      // the network fetch we just kicked off above.
+      return cached || (await network) || Response.error();
     })
   );
 });
