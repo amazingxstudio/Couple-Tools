@@ -15,6 +15,14 @@ function yesterdayStr() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
+// Same multi-layer flame markup as the two copies baked into
+// index.html (#streakFabIcon / #streakGiantFlame) — needed here too
+// since the milestone row's five dots are generated fresh each time
+// the streak modal opens, one per milestone, each showing what the
+// flame looks like AT that milestone's tier (via its own fire-N
+// class below) rather than the user's actual current tier.
+const FLAME_SVG = '<svg viewBox="-3 -5 30 30"><path class="flame-crown" d="M12 -4c2.5 5-1.5 7-3.5 11.5-1.6 3.6-1 6.7 1 9a6 6 0 0010-3.5c0-2.2-1-4.3-2.3-5.7 3.6 2 6.3 5.7 6.3 10.2a10.5 10.5 0 01-21 0c0-8.5 5.4-13.6 9.5-21.5z"/><path class="flame-left" d="M10 21c-2.5 0-5-1.6-6.3-4.4-1.6-3.4-.7-7 1.3-9.6-.4 3 .3 5 2 6.8 1.6 1.7 3 2.2 3.6 3.4.6 1.2.2 2.5-.6 3.8z"/><path class="flame-right" d="M14 21c2.5 0 5-1.6 6.3-4.4 1.6-3.4.7-7-1.3-9.6.4 3-.3 5-2 6.8-1.6 1.7-3 2.2-3.6 3.4-.6 1.2-.2 2.5.6 3.8z"/><g transform="translate(-3,-5) scale(1.25)"><path class="flame-base" d="M12 2c1 4-3 5-3 9a3 3 0 006 0c0-1-.4-2-1-3 2 1 3 3 3 5a5 5 0 01-10 0c0-4 3-6 5-11z"/><path class="flame-core" d="M12 8.5c1 2.2-1.3 2.8-1.3 4.8a1.8 1.8 0 003.6 0c0-.6-.2-1.1-.5-1.6 1.1.6 1.8 1.7 1.8 2.9a2.8 2.8 0 01-5.6 0c0-2.4 1.5-3.7 2-6.1z"/></g></svg>';
+
 function getLevel(count) {
   let lvl = CONFIG.STREAK_LEVELS[0];
   for (const l of CONFIG.STREAK_LEVELS) if (count >= l.min) lvl = l;
@@ -146,9 +154,7 @@ function openStreakModal() {
   const row = $('milestoneRow');
   row.innerHTML = CONFIG.STREAK_MILESTONES.map((m) => `
     <div class="milestone-item ${s.count >= m ? 'is-reached' : ''}">
-      <div class="milestone-dot">
-        <svg viewBox="0 0 24 24"><path d="M12 2c1 4-3 5-3 9a3 3 0 006 0c0-1-.4-2-1-3 2 1 3 3 3 5a5 5 0 01-10 0c0-4 3-6 5-11z"/></svg>
-      </div>
+      <div class="milestone-dot fire-${m}">${FLAME_SVG}</div>
       <span>${m}d</span>
     </div>
   `).join('');
