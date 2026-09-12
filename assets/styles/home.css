@@ -361,19 +361,19 @@ audio { display: none; }
 /* Tier 3 — Blaze Master (50+ days): everything fuller, faint glow. */
 .fire-50 .flame-core { opacity: 1; transform: scale(1); fill: #ffe08a; }
 .fire-50 .flame-left, .fire-50 .flame-right { opacity: 1; transform: scale(1); fill: #ffa23d; }
-.streak-flame.fire-50, .streak-giant-flame.fire-50 { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 55%, transparent)); }
+.streak-flame.fire-50, .streak-giant-flame.fire-50, .milestone-dot.fire-50 { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 55%, transparent)); }
 
 /* Tier 4 — Inferno Legend (100+ days): outer blaze starts, stronger glow. */
 .fire-100 .flame-core { opacity: 1; transform: scale(1); fill: #ffefb0; }
 .fire-100 .flame-left, .fire-100 .flame-right { opacity: 1; transform: scale(1.05); fill: #ffb545; }
 .fire-100 .flame-crown { opacity: 0.85; transform: scale(0.9); fill: #ffcf6b; }
-.streak-flame.fire-100, .streak-giant-flame.fire-100 { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 65%, transparent)); }
+.streak-flame.fire-100, .streak-giant-flame.fire-100, .milestone-dot.fire-100 { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 65%, transparent)); }
 
 /* Tier 5 — Mythic Dragon (200+ days): full blaze, white-hot core, maximum glow. */
 .fire-200 .flame-core { opacity: 1; transform: scale(1.05); fill: #fff6d8; }
 .fire-200 .flame-left, .fire-200 .flame-right { opacity: 1; transform: scale(1.1); fill: #ffd27a; }
 .fire-200 .flame-crown { opacity: 1; transform: scale(1); fill: #ffe9a8; }
-.streak-flame.fire-200, .streak-giant-flame.fire-200 { filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 75%, transparent)); }
+.streak-flame.fire-200, .streak-giant-flame.fire-200, .milestone-dot.fire-200 { filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 75%, transparent)); }
 
 /* ---- Streak detail modal ---- */
 .streak-modal .modal-box { text-align: center; padding-top: var(--sp-6); }
@@ -419,8 +419,9 @@ audio { display: none; }
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 4px;
 }
-.milestone-dot svg { width: 13px; height: 13px; fill: currentColor; }
+.milestone-dot svg { width: 13px; height: 13px; fill: currentColor; overflow: visible; }
 .milestone-item.is-reached .milestone-dot { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); }
+.milestone-item:not(.is-reached) .milestone-dot svg { filter: grayscale(1) opacity(0.6); }
 .milestone-item span { font-size: 0.62rem; font-weight: 700; color: var(--ink-soft); }
 
 .stat-pills {
