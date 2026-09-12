@@ -268,32 +268,31 @@
 .swatch-theme-colorful { background: linear-gradient(135deg, #e6d6f2, #ffd9c2); }
 
 /* ---- Top bar (used by every full-screen page) ----
-   Full-width, flush against the top and both edges of the screen —
-   a single flat rectangle, deliberately with no border-radius,
-   border, or box-shadow. Each page's own background (.surface) is
-   also a full-screen rectangle sitting behind everything (z-index
-   40); if this bar had any rounded corner, a border, or a shadow,
-   that page rectangle — or the shadow's own box — would show through
-   right at the seam and read as a second layer stacked behind the
-   bar. A single plain rectangle flush against the same edges has
-   nothing behind it left exposed, so there's only ever one layer. */
+   A plain in-flow bar — NOT position:fixed. .surface (each page's
+   own container) already fills the whole screen and never scrolls
+   itself (only its .surface-scroll child does), so a normal element
+   sitting at the top of .surface already stays put on screen without
+   any manual overlay positioning — exactly like .cal-nav and
+   .together-tabs, its siblings, already do. Height comes from its
+   own padding, not a fixed pixel value, so the bar is always exactly
+   as tall as its content needs and never over- or under-sized. This
+   also avoids the two ways position:fixed here previously produced a
+   second visible "layer": a rounded/shadowed corner exposing
+   .surface's own rectangle behind it, and a manually-guessed
+   padding-top gap on the page below that had no visible boundary
+   from the bar above it. */
 .sheet-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 5;
-  height: var(--topbar-h);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-3);
-  padding: 0 var(--sp-4);
-  padding-top: var(--safe-t);
+  padding: 13px var(--sp-4);
+  padding-top: calc(var(--safe-t) + 13px);
   flex-shrink: 0;
   background: var(--nav-bg);
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--card-border);
 }
 .sheet-header h2 {
   font-family: var(--font-display);
@@ -302,17 +301,6 @@
 }
 .sheet-body {
   padding: var(--sp-4) var(--sp-4) calc(var(--safe-b) + var(--dock-h) + var(--dock-gap) * 2 + 10px);
-}
-
-/* The header is fixed and no longer in normal flow, so give each of
-   its pages room at the top instead — this replaces the old
-   margin-based gap. --topbar-h already accounts for the safe-area
-   inset internally (see .sheet-header), so pages just need its own
-   height plus a normal content gap below it. */
-#calendarScreen,
-#togetherScreen,
-#settingsScreen {
-  padding-top: calc(var(--topbar-h) + var(--sp-4));
 }
 
 .section {

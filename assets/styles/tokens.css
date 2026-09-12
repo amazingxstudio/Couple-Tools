@@ -43,8 +43,7 @@
 
   /* ---- Shared layout metrics ---- */
   --dock-h: 68px;
-  --dock-gap: 14px;    /* how far the floating dock/top-bar sit off the screen edges */
-  --topbar-h: 26px;
+  --dock-gap: 14px;    /* how far the floating dock sits off the screen edges */
 
   /* ---- Safe area ---- */
   --safe-t: env(safe-area-inset-top, 0px);
