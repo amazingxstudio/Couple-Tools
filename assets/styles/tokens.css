@@ -44,7 +44,7 @@
   /* ---- Shared layout metrics ---- */
   --dock-h: 68px;
   --dock-gap: 14px;    /* how far the floating dock/top-bar sit off the screen edges */
-  --topbar-h: 68px; /* kept equal to --dock-h so the top bar and bottom dock match in size */
+  --topbar-h: 52px;
 
   /* ---- Safe area ---- */
   --safe-t: env(safe-area-inset-top, 0px);

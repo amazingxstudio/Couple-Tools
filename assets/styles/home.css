@@ -335,42 +335,41 @@ audio { display: none; }
    The flame is one icon made of five stacked layers: an outer
    "crown" blaze, two side tongues, the original base flame, and a
    hot inner core. Higher tiers (fire-0 … fire-200, see
-   CONFIG.STREAK_LEVELS) reveal and enlarge more of those layers and
-   push their colors hotter, so the *same* icon visibly grows into a
-   bigger fire — nothing is duplicated or added around it. */
-.flame-base, .flame-core, .flame-left, .flame-right, .flame-crown {
+   CONFIG.STREAK_LEVELS) reveal and enlarge more of those layers, so
+   the *same* icon visibly grows into a bigger fire — nothing is
+   duplicated or added around it. flame-base is never resized or
+   recolored by a tier: it stays exactly the original flame (same
+   size, same theme-accent color via currentColor) at every tier, so
+   the lowest tier never looks smaller or different than before this
+   feature existed — the extra layers are purely additive. */
+.flame-base { fill: currentColor; }
+.flame-core, .flame-left, .flame-right, .flame-crown {
+  opacity: 0;
+  transform: scale(0.4);
   transform-origin: 12px 22px;
   transition: opacity 0.45s ease, transform 0.45s ease, fill 0.45s ease;
 }
-.flame-core, .flame-left, .flame-right, .flame-crown { opacity: 0; transform: scale(0.4); }
+.flame-core { transform-origin: 12px 12px; }
 
-/* Tier 0 — Spark Beginner: small, dim ember; just the base flame. */
-.fire-0 .flame-base { fill: #cc5a34; transform: scale(0.8); }
-
-/* Tier 1 — Ember Guardian: full-size base flame, a hot core peeks in. */
-.fire-3 .flame-base { fill: #ff6a2c; }
+/* Tier 1 — Ember Guardian (3+ days): a hot core peeks in. */
 .fire-3 .flame-core { opacity: 1; transform: scale(0.8); fill: #ffdb8a; }
 
-/* Tier 2 — Phoenix Rising: side tongues fan out. */
-.fire-10 .flame-base { fill: #ff6a2c; }
+/* Tier 2 — Phoenix Rising (10+ days): side tongues fan out. */
 .fire-10 .flame-core { opacity: 1; transform: scale(0.9); fill: #ffdb8a; }
 .fire-10 .flame-left, .fire-10 .flame-right { opacity: 1; transform: scale(0.8); fill: #ff8a3d; }
 
-/* Tier 3 — Blaze Master: everything fuller and brighter, faint glow. */
-.fire-50 .flame-base { fill: #ff7a2c; }
+/* Tier 3 — Blaze Master (50+ days): everything fuller, faint glow. */
 .fire-50 .flame-core { opacity: 1; transform: scale(1); fill: #ffe08a; }
 .fire-50 .flame-left, .fire-50 .flame-right { opacity: 1; transform: scale(1); fill: #ffa23d; }
 .streak-flame.fire-50, .streak-giant-flame.fire-50 { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 55%, transparent)); }
 
-/* Tier 4 — Inferno Legend: the outer blaze starts to show, stronger glow. */
-.fire-100 .flame-base { fill: #ff8a2c; }
+/* Tier 4 — Inferno Legend (100+ days): outer blaze starts, stronger glow. */
 .fire-100 .flame-core { opacity: 1; transform: scale(1); fill: #ffefb0; }
 .fire-100 .flame-left, .fire-100 .flame-right { opacity: 1; transform: scale(1.05); fill: #ffb545; }
 .fire-100 .flame-crown { opacity: 0.85; transform: scale(0.9); fill: #ffcf6b; }
 .streak-flame.fire-100, .streak-giant-flame.fire-100 { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 65%, transparent)); }
 
-/* Tier 5 — Mythic Dragon: full blaze, white-hot core, maximum glow. */
-.fire-200 .flame-base { fill: #ffb545; }
+/* Tier 5 — Mythic Dragon (200+ days): full blaze, white-hot core, maximum glow. */
 .fire-200 .flame-core { opacity: 1; transform: scale(1.05); fill: #fff6d8; }
 .fire-200 .flame-left, .fire-200 .flame-right { opacity: 1; transform: scale(1.1); fill: #ffd27a; }
 .fire-200 .flame-crown { opacity: 1; transform: scale(1); fill: #ffe9a8; }

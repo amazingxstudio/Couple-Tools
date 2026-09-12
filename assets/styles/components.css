@@ -268,16 +268,10 @@
 .swatch-theme-colorful { background: linear-gradient(135deg, #e6d6f2, #ffd9c2); }
 
 /* ---- Top bar (used by every full-screen page) ----
-   A pill-shaped bar, fixed in place exactly like the bottom dock:
-   it floats above the page content with a clear gap on every side
-   (top and both edges) instead of spanning full-width and touching
-   the top of the screen, so content can still show through that gap
-   as the page scrolls underneath. border-radius uses --r-pill
-   explicitly (rather than a large-but-technically-rectangular radius
-   that only happens to round out at this particular height) so the
-   fully round ends are guaranteed regardless of height changes, and
-   height uses the same --topbar-h token kept equal to the dock's
-   --dock-h so the two floating bars always match in size. */
+   A normal rectangular bar (same rounded-corner treatment as a
+   regular .card, not a pill), fixed in place and floating clear of
+   the top and both edges so content can still show through that gap
+   as the page scrolls underneath. Kept compact — see --topbar-h. */
 .sheet-header {
   position: fixed;
   top: calc(var(--safe-t) + var(--dock-gap));
@@ -289,13 +283,13 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-3);
-  padding: 0 var(--sp-5);
+  padding: 0 var(--sp-4);
   flex-shrink: 0;
   background: var(--nav-bg);
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
   border: 1px solid var(--card-border);
-  border-radius: var(--r-pill);
+  border-radius: var(--r-lg);
   box-shadow: var(--shadow-soft);
 }
 .sheet-header h2 {
