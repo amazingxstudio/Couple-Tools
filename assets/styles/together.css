@@ -9,7 +9,7 @@
 .together-tabs {
   display: flex;
   gap: 6px;
-  padding: 0 var(--sp-4) var(--sp-3);
+  padding: var(--sp-4) var(--sp-4) var(--sp-3);
   overflow-x: auto;
   flex-shrink: 0;
   scrollbar-width: none;
