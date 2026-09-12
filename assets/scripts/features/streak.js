@@ -115,26 +115,16 @@ export function renderBadge() {
 }
 
 /** Applies the streak's level tier as a class (fire-0 … fire-200, see
- *  CONFIG.STREAK_LEVELS) and grows a small ring of ember sparks around
- *  the flame to match — more days, more sparks, so the flame visibly
- *  "grows" rather than just the number underneath it changing. */
+ *  CONFIG.STREAK_LEVELS). Each tier's look — how many of the flame's
+ *  internal layers (core / side tongues / outer blaze) are visible,
+ *  their color, and the glow — is entirely driven by CSS off this
+ *  class (see .flame-base etc. in home.css), so the flame itself
+ *  grows fuller and brighter with the streak rather than anything
+ *  being added around it. */
 function applyFireLevel(flameEl, count) {
   const level = getLevel(count);
-  const tierIndex = CONFIG.STREAK_LEVELS.indexOf(level);
   CONFIG.STREAK_LEVELS.forEach((l) => flameEl.classList.remove(l.fireClass));
   flameEl.classList.add(level.fireClass);
-
-  flameEl.querySelectorAll('.flame-spark').forEach((s) => s.remove());
-  for (let i = 0; i < tierIndex; i++) {
-    const spark = document.createElement('span');
-    spark.className = 'flame-spark';
-    const angle = (360 / Math.max(tierIndex, 1)) * i + (i % 2 ? 12 : -12);
-    const radius = 13 + (i % 3) * 3;
-    spark.style.setProperty('--a', angle);
-    spark.style.setProperty('--r', radius);
-    spark.style.setProperty('--d', (i * 0.35).toFixed(2));
-    flameEl.appendChild(spark);
-  }
 }
 
 function openStreakModal() {

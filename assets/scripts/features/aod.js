@@ -188,7 +188,11 @@ function renderAppLauncher() {
   // instead of only opening toward one corner.
   const orbs = ring.querySelectorAll('.app-orb');
   const n = orbs.length;
-  const radius = 118; // px from the FAB's center to each orb's center
+  // Small enough that the ring reads as "next to the button you
+  // pressed" rather than scattered across the screen, but still
+  // leaves ~8px between adjacent 46px orbs at n=5 on a 180° sweep
+  // so they never overlap each other.
+  const radius = 74; // px from the FAB's center to each orb's center
   orbs.forEach((orb, i) => {
     const t = n > 1 ? i / (n - 1) : 0.5;
     const angle = (180 - t * 180) * (Math.PI / 180); // 180° = due left, 90° = due up, 0° = due right

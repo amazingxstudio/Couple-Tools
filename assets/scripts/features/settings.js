@@ -11,9 +11,11 @@ import { isLockEnabled, openSetPinFlow, disableLock } from './lock.js';
 import { confirmDialog } from '../core/dom.js';
 import { attachDatePicker } from '../core/datepicker.js';
 import { isNotifyEnabled, enableNotify, disableNotify } from './notifications.js';
+import { escapeHtml } from '../core/utils.js';
 
 let activeProfile = 1;
 let floatingSyncs = [];
+let phoneAdding = false; // whether the phone-numbers box currently shows an empty input row
 
 function profile() {
   return Store.data[`profile${activeProfile}`];
@@ -26,7 +28,8 @@ async function populateForm() {
   setDateField('setBirthday', p.birthday);
   $('setTelegram').value = p.telegram;
   $('setEmail').value = p.email;
-  renderPhoneTags();
+  phoneAdding = p.phones.length === 0; // start ready to type when there's nothing saved yet
+  renderPhoneBox();
 
   const avatarImg = $('setAvatarImg');
   if (p.avatarId) {
@@ -47,17 +50,60 @@ function setDateField(id, iso) {
   else input.value = iso || '';
 }
 
-function renderPhoneTags() {
-  const wrap = $('setPhoneTags');
+/** Renders the phone-numbers box: each saved number as its own row
+ *  (stacked, not side-by-side), plus — while `phoneAdding` is true —
+ *  a plain inline input for the next number at the bottom. When not
+ *  adding, a "+ Add a phone number" row is shown instead; tapping
+ *  anywhere in the box (or that row) reopens the input. */
+function renderPhoneBox() {
+  const box = $('setPhoneBox');
   const phones = profile().phones;
-  wrap.innerHTML = phones.map((ph, i) => `
-    <span class="tag-pill">${ph}<button data-i="${i}" aria-label="Remove"><svg viewBox="0 0 24 24" width="10" height="10"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button></span>
+
+  box.innerHTML = phones.map((ph, i) => `
+    <div class="phone-row" data-i="${i}">
+      <span>${escapeHtml(ph)}</span>
+      <button type="button" class="phone-remove" data-i="${i}" aria-label="Remove"><svg viewBox="0 0 24 24" width="10" height="10"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
   `).join('');
-  $$('button', wrap).forEach((btn) => on(btn, 'click', () => {
+
+  if (phoneAdding) {
+    box.insertAdjacentHTML('beforeend', '<div class="phone-input-row"><input id="setPhoneInput" type="tel" inputmode="tel" autocomplete="tel" placeholder="Add a phone number"></div>');
+  } else {
+    box.insertAdjacentHTML('beforeend', '<div class="phone-add-hint">+ Add a phone number</div>');
+  }
+
+  $$('.phone-remove', box).forEach((btn) => on(btn, 'click', (e) => {
+    e.stopPropagation();
     const i = Number(btn.dataset.i);
     Store.patch((d) => { d[`profile${activeProfile}`].phones.splice(i, 1); });
-    renderPhoneTags();
+    renderPhoneBox();
   }));
+
+  const input = $('setPhoneInput');
+  if (input) {
+    on(input, 'keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      commitPhone(input.value);
+    });
+    on(input, 'blur', () => commitPhone(input.value, { collapseIfEmpty: true }));
+    input.focus();
+  }
+}
+
+/** Saves a non-empty phone number and leaves the box ready for the
+ *  next one (chains on repeated Enter presses). With
+ *  `collapseIfEmpty` (used on blur), an empty value closes the input
+ *  back down to the "+ Add a phone number" row instead of saving. */
+function commitPhone(rawVal, { collapseIfEmpty = false } = {}) {
+  const val = rawVal.trim();
+  if (!val) {
+    if (collapseIfEmpty) { phoneAdding = false; renderPhoneBox(); }
+    return;
+  }
+  Store.patch((d) => { d[`profile${activeProfile}`].phones.push(val); });
+  phoneAdding = true;
+  renderPhoneBox();
 }
 
 function bindField(id, key) {
@@ -175,17 +221,13 @@ export function initSettings() {
     setupFloatingField('setEmail'),
     setupFloatingField('setStartDate'),
     setupFloatingField('setScrollText'),
-    setupFloatingField('setPhoneInput'),
   ];
 
-  on($('setPhoneAddBtn'), 'click', () => {
-    const input = $('setPhoneInput');
-    const val = input.value.trim();
-    if (!val) return;
-    Store.patch((d) => { d[`profile${activeProfile}`].phones.push(val); });
-    input.value = '';
-    input.dispatchEvent(new Event('change'));
-    renderPhoneTags();
+  // Tapping anywhere in the phone box (except a remove button, which
+  // stops its own click from bubbling here) reopens the input for a
+  // new number when the box is currently just showing the saved list.
+  on($('setPhoneBox'), 'click', () => {
+    if (!phoneAdding) { phoneAdding = true; renderPhoneBox(); }
   });
 
   // Note: setAvatarInput is an absolutely-positioned, fully-covering

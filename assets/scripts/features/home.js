@@ -60,6 +60,14 @@ export function renderCounter() {
   textEl.textContent = scrollingText || (startDate ? "Every day with you is one I'd choose again." : 'Add your story in Settings.');
 }
 
+/** Strips a saved phone number down to a bare tel: URI target (digits
+ *  plus an optional leading +), so however it was typed — spaces,
+ *  dashes, parentheses — tapping it in the profile view opens the
+ *  dialer with just the number pre-filled. */
+function telHref(ph) {
+  return ph.trim().replace(/(?!^\+)[^\d]/g, '');
+}
+
 async function openProfileView(which) {
   const p = Store.data[`profile${which}`];
   $('profileViewName').textContent = p.name || `Partner ${which}`;
@@ -68,7 +76,7 @@ async function openProfileView(which) {
   $('profileViewTelegram').textContent = p.telegram ? '@' + p.telegram.replace(/^@/, '') : 'Not added yet';
   const phoneWrap = $('profileViewPhones');
   phoneWrap.innerHTML = p.phones.length
-    ? p.phones.map((ph) => `<span class="tag-pill">${escapeHtml(ph)}</span>`).join('')
+    ? p.phones.map((ph) => `<a class="tag-pill" href="tel:${telHref(ph)}">${escapeHtml(ph)}</a>`).join('')
     : '<span class="u-muted" style="font-size:.82rem">No phone numbers added yet</span>';
 
   const img = $('profileViewAvatar');
