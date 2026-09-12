@@ -269,9 +269,14 @@
 
 /* ---- Top bar (used by every full-screen page) ----
    Full-width, flush against the top and both edges of the screen —
-   not a floating inset box. Rounded only on the bottom two corners
-   (the top corners sit flush with the screen's own top corners, so
-   they stay square) and kept compact — see --topbar-h. */
+   a single flat rectangle, deliberately with no border-radius,
+   border, or box-shadow. Each page's own background (.surface) is
+   also a full-screen rectangle sitting behind everything (z-index
+   40); if this bar had any rounded corner, a border, or a shadow,
+   that page rectangle — or the shadow's own box — would show through
+   right at the seam and read as a second layer stacked behind the
+   bar. A single plain rectangle flush against the same edges has
+   nothing behind it left exposed, so there's only ever one layer. */
 .sheet-header {
   position: fixed;
   top: 0;
@@ -289,9 +294,6 @@
   background: var(--nav-bg);
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--card-border);
-  border-radius: 0 0 var(--r-lg) var(--r-lg);
-  box-shadow: var(--shadow-soft);
 }
 .sheet-header h2 {
   font-family: var(--font-display);
