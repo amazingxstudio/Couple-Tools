@@ -192,7 +192,7 @@ function renderAppLauncher() {
   // pressed" rather than scattered across the screen, but still
   // leaves ~8px between adjacent 46px orbs at n=5 on a 180° sweep
   // so they never overlap each other.
-  const radius = 74; // px from the FAB's center to each orb's center
+  const radius = 64; // px from the FAB's center to each orb's center — close to the smallest this can go before adjacent 46px orbs start to overlap at this spread
   orbs.forEach((orb, i) => {
     const t = n > 1 ? i / (n - 1) : 0.5;
     const angle = (180 - t * 180) * (Math.PI / 180); // 180° = due left, 90° = due up, 0° = due right
