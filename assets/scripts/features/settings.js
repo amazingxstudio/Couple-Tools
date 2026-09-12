@@ -54,8 +54,12 @@ function setDateField(id, iso) {
  *  (stacked, not side-by-side), plus — while `phoneAdding` is true —
  *  a plain inline input for the next number at the bottom. When not
  *  adding, a "+ Add a phone number" row is shown instead; tapping
- *  anywhere in the box (or that row) reopens the input. */
-function renderPhoneBox() {
+ *  anywhere in the box (or that row) reopens the input.
+ *  `focusInput` should only be true for an explicit user action (tapping
+ *  the box, or right after saving one number to chain to the next) —
+ *  never on a plain re-render such as switching partner tabs, or the
+ *  keyboard would pop up out of nowhere on every switch. */
+function renderPhoneBox(focusInput = false) {
   const box = $('setPhoneBox');
   const phones = profile().phones;
 
@@ -87,14 +91,15 @@ function renderPhoneBox() {
       commitPhone(input.value);
     });
     on(input, 'blur', () => commitPhone(input.value, { collapseIfEmpty: true }));
-    input.focus();
+    if (focusInput) input.focus();
   }
 }
 
 /** Saves a non-empty phone number and leaves the box ready for the
- *  next one (chains on repeated Enter presses). With
- *  `collapseIfEmpty` (used on blur), an empty value closes the input
- *  back down to the "+ Add a phone number" row instead of saving. */
+ *  next one (chains on repeated Enter presses, refocusing the fresh
+ *  input each time). With `collapseIfEmpty` (used on blur), an empty
+ *  value closes the input back down to the "+ Add a phone number"
+ *  row instead of saving. */
 function commitPhone(rawVal, { collapseIfEmpty = false } = {}) {
   const val = rawVal.trim();
   if (!val) {
@@ -103,7 +108,7 @@ function commitPhone(rawVal, { collapseIfEmpty = false } = {}) {
   }
   Store.patch((d) => { d[`profile${activeProfile}`].phones.push(val); });
   phoneAdding = true;
-  renderPhoneBox();
+  renderPhoneBox(true);
 }
 
 function bindField(id, key) {
@@ -227,7 +232,7 @@ export function initSettings() {
   // stops its own click from bubbling here) reopens the input for a
   // new number when the box is currently just showing the saved list.
   on($('setPhoneBox'), 'click', () => {
-    if (!phoneAdding) { phoneAdding = true; renderPhoneBox(); }
+    if (!phoneAdding) { phoneAdding = true; renderPhoneBox(true); }
   });
 
   // Note: setAvatarInput is an absolutely-positioned, fully-covering
