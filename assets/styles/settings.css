@@ -124,6 +124,62 @@
 }
 .danger-zone p { font-size: 0.8rem; color: var(--ink-soft); margin-bottom: var(--sp-3); }
 
+/* ---- Phone numbers field (see settings.js renderPhoneBox) ----
+   One bordered box styled like a normal .field-input, holding the
+   saved numbers stacked one per row plus (while adding) a plain
+   inline input for the next one — instead of a separate "Add"
+   button next to the field and a row of side-by-side pills below
+   it. Same width as every other field since nothing else shares
+   the row with it anymore. */
+.phone-box {
+  border: 1px solid var(--field-border);
+  border-radius: var(--r-md);
+  background: var(--field-bg);
+  overflow: hidden;
+}
+.phone-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.phone-box > *:not(:first-child) {
+  border-top: 1px solid var(--field-border);
+}
+.phone-row button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--ink-soft);
+  width: 20px; height: 20px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.phone-input-row { display: flex; }
+.phone-input-row input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+  padding: 11px 14px;
+}
+.phone-add-hint {
+  padding: 11px 14px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
 .about-row {
   display: flex;
   justify-content: space-between;

@@ -267,10 +267,17 @@
 .swatch-theme-dark     { background: linear-gradient(135deg, #14141c, #1f1e2b); }
 .swatch-theme-colorful { background: linear-gradient(135deg, #e6d6f2, #ffd9c2); }
 
-/* ---- Sheet header (used by every full-screen page) ----
-   Fixed and floating exactly like the bottom dock: it sits on top of
-   the page content with a gap on every side, instead of being an
-   in-flow bar with a solid color filling the gap around it. */
+/* ---- Top bar (used by every full-screen page) ----
+   A pill-shaped bar, fixed in place exactly like the bottom dock:
+   it floats above the page content with a clear gap on every side
+   (top and both edges) instead of spanning full-width and touching
+   the top of the screen, so content can still show through that gap
+   as the page scrolls underneath. border-radius uses --r-pill
+   explicitly (rather than a large-but-technically-rectangular radius
+   that only happens to round out at this particular height) so the
+   fully round ends are guaranteed regardless of height changes, and
+   height uses the same --topbar-h token kept equal to the dock's
+   --dock-h so the two floating bars always match in size. */
 .sheet-header {
   position: fixed;
   top: calc(var(--safe-t) + var(--dock-gap));
@@ -282,13 +289,13 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-3);
-  padding: 0 var(--sp-4);
+  padding: 0 var(--sp-5);
   flex-shrink: 0;
   background: var(--nav-bg);
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
   border: 1px solid var(--card-border);
-  border-radius: var(--r-xl);
+  border-radius: var(--r-pill);
   box-shadow: var(--shadow-soft);
 }
 .sheet-header h2 {
@@ -361,7 +368,13 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  /* Must stay above .onboard / .lock-screen (z-index 500, see
+     lock-onboarding.css) — otherwise a modal opened while either of
+     those full-screen overlays is showing (e.g. the onboarding date
+     picker) renders invisibly behind it: the click "does nothing"
+     until the onboarding/lock screen itself later closes and reveals
+     the modal that was open the whole time. */
+  z-index: 520;
   background: rgba(15, 10, 12, 0.55);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
@@ -413,7 +426,7 @@
 .toast-overlay {
   position: fixed;
   inset: 0;
-  z-index: 300;
+  z-index: 530; /* stays above .modal-overlay (520), same as before */
   display: none;
   align-items: center;
   justify-content: center;
@@ -448,7 +461,7 @@
   border-radius: var(--r-pill);
   font-size: 0.84rem;
   font-weight: 600;
-  z-index: 400;
+  z-index: 540; /* stays above .toast-overlay (530), same as before */
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--dur-med) var(--ease), transform var(--dur-med) var(--ease);
@@ -624,7 +637,10 @@
   border-radius: var(--r-pill);
   padding: 6px 8px 6px 12px;
   font-size: 0.8rem;
+  color: var(--ink);
+  text-decoration: none;
 }
+a.tag-pill { cursor: pointer; }
 .tag-pill button {
   border: none;
   background: none;
