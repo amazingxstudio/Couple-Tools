@@ -268,15 +268,15 @@
 .swatch-theme-colorful { background: linear-gradient(135deg, #e6d6f2, #ffd9c2); }
 
 /* ---- Top bar (used by every full-screen page) ----
-   A normal rectangular bar (same rounded-corner treatment as a
-   regular .card, not a pill), fixed in place and floating clear of
-   the top and both edges so content can still show through that gap
-   as the page scrolls underneath. Kept compact — see --topbar-h. */
+   Full-width, flush against the top and both edges of the screen —
+   not a floating inset box. Rounded only on the bottom two corners
+   (the top corners sit flush with the screen's own top corners, so
+   they stay square) and kept compact — see --topbar-h. */
 .sheet-header {
   position: fixed;
-  top: calc(var(--safe-t) + var(--dock-gap));
-  left: var(--dock-gap);
-  right: var(--dock-gap);
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 5;
   height: var(--topbar-h);
   display: flex;
@@ -284,12 +284,13 @@
   justify-content: space-between;
   gap: var(--sp-3);
   padding: 0 var(--sp-4);
+  padding-top: var(--safe-t);
   flex-shrink: 0;
   background: var(--nav-bg);
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
-  border: 1px solid var(--card-border);
-  border-radius: var(--r-lg);
+  border-bottom: 1px solid var(--card-border);
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
   box-shadow: var(--shadow-soft);
 }
 .sheet-header h2 {
@@ -301,15 +302,15 @@
   padding: var(--sp-4) var(--sp-4) calc(var(--safe-b) + var(--dock-h) + var(--dock-gap) * 2 + 10px);
 }
 
-/* The header is no longer in normal flow, so give each of its pages
-   room at the top instead — this replaces the old margin-based gap.
-   The extra gap (beyond one dock-gap) exists because .sheet-header's
-   box-shadow (10px offset, 30px blur) reaches well past a single
-   dock-gap and was visibly bleeding onto the content below it. */
+/* The header is fixed and no longer in normal flow, so give each of
+   its pages room at the top instead — this replaces the old
+   margin-based gap. --topbar-h already accounts for the safe-area
+   inset internally (see .sheet-header), so pages just need its own
+   height plus a normal content gap below it. */
 #calendarScreen,
 #togetherScreen,
 #settingsScreen {
-  padding-top: calc(var(--safe-t) + var(--dock-gap) + var(--topbar-h) + var(--dock-gap) * 2);
+  padding-top: calc(var(--topbar-h) + var(--sp-4));
 }
 
 .section {
