@@ -106,6 +106,7 @@ async function applyHomeBg() {
 
 function wireHomeBgPicker() {
   const input = $('homeBgFileInput');
+  on(document.querySelector('#homeBgOverlay .upload-card'), 'click', () => input.click());
   on($('homeBgUploadBtn'), 'click', () => input.click());
   on(input, 'change', async () => {
     const file = input.files[0];
