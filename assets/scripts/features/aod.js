@@ -110,7 +110,6 @@ function renderClockChips() {
 
 function wireAodBgPicker() {
   const input = $('aodBgFileInput');
-  on(input.closest('.upload-card'), 'click', () => input.click());
   on($('aodBgUploadBtn'), 'click', () => input.click());
   on(input, 'change', async () => {
     const file = input.files[0];
