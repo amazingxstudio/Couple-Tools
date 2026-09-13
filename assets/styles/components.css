@@ -286,6 +286,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-3);
+  margin: 0 var(--dock-gap); /* same side gap as .dock, the bottom bar */
   padding: 13px var(--sp-4);
   padding-top: calc(var(--safe-t) + 13px);
   flex-shrink: 0;
