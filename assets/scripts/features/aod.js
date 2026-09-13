@@ -193,14 +193,14 @@ function renderAppLauncher() {
   const radius = 82; // px from the FAB's center to each orb's center — gives ~18px of breathing room between adjacent 46px orbs at this 180° spread (64px left them almost touching)
   orbs.forEach((orb, i) => {
     const t = n > 1 ? i / (n - 1) : 0.5;
-    // The FAB now sits near the bottom-right corner (see .app-launcher
-    // in aod.css), so the semicircle is rotated to sweep through the
-    // open space up and to the left of it — 60° (up, leaning right)
-    // through 150° (due left) to 240° (down, leaning left) — instead
-    // of straight left-to-right, which would push orbs past the
-    // right edge, or straight up-to-down, which would push the
-    // lowest orb below the screen.
-    const angle = (60 + t * 180) * (Math.PI / 180);
+    // Symmetric due-left-to-due-right sweep. With the 5 apps in order
+    // Telegram, TikTok, YouTube, ChatGPT (bot), NexusDuos (bot),
+    // this puts Telegram and the last bot at the two mirrored ends
+    // (each equally "the middle" relative to the FAB), and YouTube —
+    // the middle app of the five — directly above the FAB, in line
+    // with it. Every orb stays at or above the FAB's own level, so
+    // there's no risk of the ring dipping below the screen.
+    const angle = (180 - t * 180) * (Math.PI / 180);
     const tx = Math.cos(angle) * radius;
     const ty = -Math.sin(angle) * radius;
     orb.style.setProperty('--tx', `${tx.toFixed(1)}px`);
