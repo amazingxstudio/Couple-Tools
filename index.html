@@ -192,6 +192,7 @@
     <div class="sheet-header">
       <h2>Calendar</h2>
     </div>
+    <div class="surface-scroll">
     <div class="cal-nav">
       <button id="calPrevBtn" class="icon-btn" type="button" aria-label="Previous month"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M15 4l-8 8 8 8V4z"/></svg></button>
       <h3 id="calMonthLabel">Month</h3>
@@ -200,8 +201,9 @@
     <div class="cal-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
     <div class="cal-grid" id="calGrid"></div>
 
-    <div class="cal-detail surface-scroll" id="calDetail">
+    <div class="cal-detail" id="calDetail">
       <div class="cal-detail-date" id="calDetailDate"></div>
+
 
       <div class="section">
         <div class="section-title">Notes</div>
@@ -230,6 +232,7 @@
           <button id="calMemoryCancelSelBtn" class="btn btn-ghost btn-sm" type="button">Cancel</button>
         </div>
       </div>
+    </div>
     </div>
   </div>
 
@@ -555,10 +558,7 @@
     <div class="section-title">Clock style</div>
     <div class="chip-row" id="aodTypeRow" style="margin-bottom:var(--sp-4);"></div>
     <div class="section-title">Background</div>
-    <div class="upload-card">
-      <span class="upload-label">Choose an image</span>
-      <input id="aodBgFileInput" type="file" accept="image/*" class="visually-hidden">
-    </div>
+    <input id="aodBgFileInput" type="file" accept="image/*" class="visually-hidden">
     <div class="btn-row" style="margin-bottom:var(--sp-4);">
       <button id="aodBgUploadBtn" class="btn btn-ghost btn-sm" type="button">Upload</button>
       <button id="aodBgResetBtn" class="btn btn-ghost btn-sm" type="button">Reset</button>
