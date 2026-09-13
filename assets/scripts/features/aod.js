@@ -190,12 +190,19 @@ function renderAppLauncher() {
   const n = orbs.length;
   // Small enough that the ring reads as "next to the button you
   // pressed" rather than scattered across the screen, but still
-  // leaves ~8px between adjacent 46px orbs at n=5 on a 180° sweep
+  // leaves ~3px between adjacent 46px orbs at n=5 on a 180° sweep
   // so they never overlap each other.
   const radius = 64; // px from the FAB's center to each orb's center — close to the smallest this can go before adjacent 46px orbs start to overlap at this spread
   orbs.forEach((orb, i) => {
     const t = n > 1 ? i / (n - 1) : 0.5;
-    const angle = (180 - t * 180) * (Math.PI / 180); // 180° = due left, 90° = due up, 0° = due right
+    // The FAB now sits near the bottom-right corner (see .app-launcher
+    // in aod.css), so the semicircle is rotated to sweep through the
+    // open space up and to the left of it — 60° (up, leaning right)
+    // through 150° (due left) to 240° (down, leaning left) — instead
+    // of straight left-to-right, which would push orbs past the
+    // right edge, or straight up-to-down, which would push the
+    // lowest orb below the screen.
+    const angle = (60 + t * 180) * (Math.PI / 180);
     const tx = Math.cos(angle) * radius;
     const ty = -Math.sin(angle) * radius;
     orb.style.setProperty('--tx', `${tx.toFixed(1)}px`);
