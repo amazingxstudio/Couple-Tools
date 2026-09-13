@@ -159,6 +159,8 @@ function appIconSvg(key) {
     telegram: '<path fill="#fff" d="M21.5 4.5L2.7 11.9c-1.3.5-1.3 1.2-.2 1.6l4.8 1.5 1.8 5.6c.2.6.4.8.8.8.4 0 .6-.2.8-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.5c.3-1.3-.5-1.9-1.3-1.4zM8.6 14.1l9.2-5.8c.5-.3.9-.1.6.2l-7.8 7.1-.3 3-1.4-3.8z"/>',
     tiktok: '<path fill="#fff" d="M16.6 3h-3.1v12.4a2.7 2.7 0 11-2.3-2.7v-3.2a5.9 5.9 0 105.4 5.9V9.2a7.6 7.6 0 004.4 1.4V7.5a4.5 4.5 0 01-4.4-4.5z"/>',
     youtube: '<path fill="#fff" d="M22 12s0-3.3-.4-4.8a2.8 2.8 0 00-2-2C17.9 5 12 5 12 5s-5.9 0-7.6.2a2.8 2.8 0 00-2 2C2 8.7 2 12 2 12s0 3.3.4 4.8a2.8 2.8 0 002 2C6.1 19 12 19 12 19s5.9 0 7.6-.2a2.8 2.8 0 002-2C22 15.3 22 12 22 12zM10 15.5v-7l6 3.5-6 3.5z"/>',
+    chatgpt: '<text x="12" y="15.5" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="8.5" letter-spacing="-0.3" fill="#000">GPT</text>',
+    nexusduos: '<text x="12" y="15.5" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="9.5" fill="#fff">ND</text>',
   };
   return icons[key] || '<circle cx="12" cy="12" r="8" fill="#fff"/>';
 }
@@ -169,9 +171,7 @@ function renderAppLauncher() {
   const apps = CONFIG.APP_LAUNCHER;
   ring.innerHTML = apps.map((app, i) => `
     <button class="app-orb" type="button" style="background:${app.color}" data-key="${app.key}" aria-label="${app.label}">
-      ${app.isBot
-        ? `<img src="${app.avatar}" alt="${app.label}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="app-orb-fallback">${app.label.split(' ').map((w) => w[0]).join('').slice(0, 2)}</span>`
-        : `<svg viewBox="0 0 24 24">${appIconSvg(app.key)}</svg>`}
+      <svg viewBox="0 0 24 24">${appIconSvg(app.key)}</svg>
       <span class="app-orb-label">${app.label}</span>
     </button>
   `).join('');
