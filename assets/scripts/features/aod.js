@@ -188,11 +188,9 @@ function renderAppLauncher() {
   // instead of only opening toward one corner.
   const orbs = ring.querySelectorAll('.app-orb');
   const n = orbs.length;
-  // Small enough that the ring reads as "next to the button you
-  // pressed" rather than scattered across the screen, but still
-  // leaves ~3px between adjacent 46px orbs at n=5 on a 180° sweep
-  // so they never overlap each other.
-  const radius = 64; // px from the FAB's center to each orb's center — close to the smallest this can go before adjacent 46px orbs start to overlap at this spread
+  // Close enough that the ring reads as "next to the button you
+  // pressed" rather than scattered across the screen.
+  const radius = 82; // px from the FAB's center to each orb's center — gives ~18px of breathing room between adjacent 46px orbs at this 180° spread (64px left them almost touching)
   orbs.forEach((orb, i) => {
     const t = n > 1 ? i / (n - 1) : 0.5;
     // The FAB now sits near the bottom-right corner (see .app-launcher
