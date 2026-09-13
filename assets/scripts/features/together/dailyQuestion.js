@@ -32,8 +32,17 @@ function render() {
           <span class="date">${relativeTime(a.ts)}</span>
           <div class="who">${escapeHtml(nameFor(a.who))}</div>
           <p>${escapeHtml(a.text)}</p>
+          <button class="answer-delete" data-del-answer="${a.id}" aria-label="Delete"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
         </div>`).join('')
     : '<div class="empty-state">No answers yet today — start the conversation.</div>';
+  wrap.querySelectorAll('[data-del-answer]').forEach((btn) => on(btn, 'click', () => deleteAnswer(btn.dataset.delAnswer)));
+}
+
+function deleteAnswer(id) {
+  Store.patch((d) => {
+    d.together.answers = d.together.answers.filter((a) => a.id !== id);
+  });
+  render();
 }
 
 function nameFor(who) {
