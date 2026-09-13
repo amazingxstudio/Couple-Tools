@@ -50,9 +50,15 @@
   gap: var(--sp-2);
 }
 .answer-item {
-  padding: var(--sp-3) var(--sp-4);
+  padding: var(--sp-3) 34px var(--sp-3) var(--sp-4);
   border-radius: var(--r-md);
+  position: relative;
 }
+.answer-item .answer-delete {
+  position: absolute; top: 8px; right: 8px;
+  border: none; background: none; color: var(--ink-soft); cursor: pointer;
+}
+.answer-item .answer-delete svg { width: 12px; height: 12px; fill: currentColor; }
 .answer-item .who {
   font-size: 0.68rem;
   font-weight: 800;
