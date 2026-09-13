@@ -85,8 +85,9 @@
    gone, so the screen stays clean until you actually need it. */
 .app-launcher {
   position: absolute;
-  right: 38px; /* same side as .aod-close (the "cancel"/close button, top-right) */
-  bottom: calc(var(--safe-b) + 68px);
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(var(--safe-b) + 20px);
   z-index: 6;
 }
 .app-launcher-fab {
